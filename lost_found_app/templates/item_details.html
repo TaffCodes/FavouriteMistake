@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Item Details</title>
+</head>
+<body>
+    <h2>Item Details</h2>
+    <p>Name: {{ lost_item.name }}</p>
+    <p>Category: {{ lost_item.category.name }}</p>
+    <p>Description: {{ lost_item.description }}</p>
+    <p>Location: {{ lost_item.location }}</p>
+    <img src="{{ lost_item.image.url }}" alt="{{ lost_item.name }}">
+</body>
+</html>

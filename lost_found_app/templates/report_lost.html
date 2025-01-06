@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report Lost Item</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input[type="text"], textarea, select {
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        input[type="file"] {
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px;
+            margin-top: 20px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Report Lost Item</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="id_name">Item Name</label>
+            {{ form.name }}
+
+            <label for="id_category">Category</label>
+            {{ form.category }}
+
+            <label for="id_description">Description</label>
+            {{ form.description }}
+
+            <label for="id_location">Location</label>
+            {{ form.location }}
+
+            <label for="id_image">Image</label>
+            {{ form.image }}
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

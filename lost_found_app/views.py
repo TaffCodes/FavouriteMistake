@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
-from .forms import SignUpForm
+from .forms import SignUpForm, LostItemForm, FoundItemForm
+from .models import LostItem, FoundItem
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.decorators import login_required
@@ -46,3 +47,28 @@ def signup(request):
 @login_required
 def profile(request):
     return render(request, 'profile.html', {'user': request.user})
+
+def report_lost_item(request):
+    if request.method == 'POST':
+        form = LostItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = LostItemForm()
+    return render(request, 'report_lost.html', {'form': form})
+
+def report_found_item(request):
+    if request.method == 'POST':
+        form = FoundItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = FoundItemForm()
+    return render(request, 'report_found.html', {'form': form})
+
+def item_details(request, id):
+    lost_item = get_object_or_404(LostItem, id=id)
+    found_item = get_object_or_404(FoundItem, id=id)
+    return render(request, 'item_details.html', {'lost_item': lost_item, 'found_item': found_item})

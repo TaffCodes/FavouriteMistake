@@ -7,3 +7,31 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class LostItem(models.Model):
+    name = models.CharField(max_length=100)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    description = models.TextField()
+    location = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='lost_items/')
+    reported_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+class FoundItem(models.Model):
+    name = models.CharField(max_length=100)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    description = models.TextField()
+    location = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='found_items/')
+    reported_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
