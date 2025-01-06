@@ -1,0 +1,1 @@
+default_app_config = 'lost_found_app.apps.LostFoundAppConfig'
