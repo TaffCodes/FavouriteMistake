@@ -2,13 +2,64 @@
 <html>
 <head>
     <title>Item Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .item-details {
+            text-align: center;
+        }
+        .item-details img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .item-details h3 {
+            margin: 10px 0;
+            font-size: 24px;
+        }
+        .item-details p {
+            margin: 5px 0;
+            color: #777;
+        }
+    </style>
 </head>
 <body>
-    <h2>Item Details</h2>
-    <p>Name: {{ lost_item.name }}</p>
-    <p>Category: {{ lost_item.category.name }}</p>
-    <p>Description: {{ lost_item.description }}</p>
-    <p>Location: {{ lost_item.location }}</p>
-    <img src="{{ lost_item.image.url }}" alt="{{ lost_item.name }}">
+    <div class="container">
+        <h2>Item Details</h2>
+        <div class="item-details">
+            {% if lost_item %}
+                <img src="{{ lost_item.image.url }}" alt="{{ lost_item.name }}">
+                <h3>{{ lost_item.name }}</h3>
+                <p>ID: RL-{{ lost_item.uuid|slice:":4" }}</p>
+                <p><strong>Category:</strong> {{ lost_item.category.name }}</p>
+                <p><strong>Description:</strong> {{ lost_item.description }}</p>
+                <p><strong>Location:</strong> {{ lost_item.location }}</p>
+            {% elif found_item %}
+                <img src="{{ found_item.image.url }}" alt="{{ found_item.name }}">
+                <h3>{{ found_item.name }}</h3>
+                <p>ID: RF-{{ found_item.uuid|slice:":4" }}</p>
+                <p><strong>Category:</strong> {{ found_item.category.name }}</p>
+                <p><strong>Description:</strong> {{ found_item.description }}</p>
+                <p><strong>Location:</strong> {{ found_item.location }}</p>
+            {% endif %}
+        </div>
+    </div>
 </body>
 </html>

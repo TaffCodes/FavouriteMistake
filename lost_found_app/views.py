@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
+from django.contrib import messages
 
 
 
@@ -23,7 +24,9 @@ def hello_world_api(request):
 
 @login_required
 def hello_world(request):
-    return render(request, 'hello_world.html')
+    lost_items = LostItem.objects.all()
+    found_items = FoundItem.objects.all()
+    return render(request, 'hello_world.html', {'lost_items': lost_items, 'found_items': found_items})
 
 def home(request):
     return render(request, 'home.html')
@@ -39,7 +42,9 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
-            return redirect('home')
+            messages.success(request, 'Account created successfully!')
+            return redirect('login')
+            
     else:
         form = SignUpForm()
     return render(request, 'registration/signup.html', {'form': form})
@@ -53,7 +58,8 @@ def report_lost_item(request):
         form = LostItemForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            messages.success(request, 'Lost item reported successfully!')
+            return redirect('hello_world')
     else:
         form = LostItemForm()
     return render(request, 'report_lost.html', {'form': form})
@@ -63,12 +69,17 @@ def report_found_item(request):
         form = FoundItemForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            messages.success(request, 'Found item reported successfully!')
+            return redirect('hello_world')
     else:
         form = FoundItemForm()
     return render(request, 'report_found.html', {'form': form})
 
 def item_details(request, id):
-    lost_item = get_object_or_404(LostItem, id=id)
-    found_item = get_object_or_404(FoundItem, id=id)
+    try:
+        lost_item = LostItem.objects.get(uuid=id)
+        found_item = None
+    except LostItem.DoesNotExist:
+        lost_item = None
+        found_item = get_object_or_404(FoundItem, uuid=id)
     return render(request, 'item_details.html', {'lost_item': lost_item, 'found_item': found_item})

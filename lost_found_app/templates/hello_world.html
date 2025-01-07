@@ -10,7 +10,7 @@
             background-color: #f4f4f4;
         }
         .container {
-            width: 50%;
+            width: 80%;
             margin: auto;
             overflow: hidden;
             padding: 20px;
@@ -26,18 +26,75 @@
             justify-content: center;
             margin-top: 20px;
         }
-        .links a {
+        .links a, .links form {
             margin: 0 10px;
+        }
+        .links a, .links button {
             padding: 10px 20px;
             background: #333;
             color: #fff;
             text-decoration: none;
+            border: none;
             border-radius: 5px;
+            cursor: pointer;
         }
-        .links a:hover {
+        .links a:hover, .links button:hover {
             background: #555;
         }
+        .items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .item {
+            width: 200px;
+            margin: 10px;
+            padding: 10px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-radius: 5px;
+        }
+        .item img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .item h3 {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .item p {
+            margin: 5px 0;
+            color: #777;
+        }
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .toast.show {
+            display: block;
+        }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var toast = document.querySelector('.toast');
+            if (toast) {
+                toast.classList.add('show');
+                setTimeout(function() {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="container">
@@ -46,6 +103,41 @@
         <div class="links">
             <a href="{% url 'report_lost' %}">Report Lost Item</a>
             <a href="{% url 'report_found' %}">Report Found Item</a>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+        {% if messages %}
+            <div class="toast">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <h2>Lost Items</h2>
+        <div class="items">
+            {% for item in lost_items %}
+                <div class="item">
+                    <a href="{% url 'item_details' item.uuid %}">
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                        <h3>{{ item.name }}</h3>
+                        <p>ID: RL-{{ item.uuid|slice:":4" }}</p>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        <h2>Found Items</h2>
+        <div class="items">
+            {% for item in found_items %}
+                <div class="item">
+                    <a href="{% url 'item_details' item.uuid %}">
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                        <h3>{{ item.name }}</h3>
+                        <p>ID: RF-{{ item.uuid|slice:":4" }}</p>
+                    </a>
+                </div>
+            {% endfor %}
         </div>
     </div>
 </body>

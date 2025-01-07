@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -7,7 +8,7 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
-    
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
 
@@ -15,6 +16,7 @@ class Category(models.Model):
         return self.name
 
 class LostItem(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)  # Set UUID as primary key
     name = models.CharField(max_length=100)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.TextField()
@@ -23,9 +25,10 @@ class LostItem(models.Model):
     reported_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return f"RL-{str(self.uuid)[:4]}"
 
 class FoundItem(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)  # Set UUID as primary key
     name = models.CharField(max_length=100)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.TextField()
@@ -34,4 +37,4 @@ class FoundItem(models.Model):
     reported_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return f"RF-{str(self.uuid)[:4]}"
