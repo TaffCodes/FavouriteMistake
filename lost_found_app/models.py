@@ -23,6 +23,8 @@ class LostItem(models.Model):
     location = models.CharField(max_length=100)
     image = models.ImageField(upload_to='lost_items/')
     reported_at = models.DateTimeField(auto_now_add=True)
+    vision_labels = models.TextField(blank=True, null=True)  # Store Vision API labels
+
 
     def __str__(self):
         return f"RL-{str(self.uuid)[:4]}"
@@ -35,6 +37,8 @@ class FoundItem(models.Model):
     location = models.CharField(max_length=100)
     image = models.ImageField(upload_to='found_items/')
     reported_at = models.DateTimeField(auto_now_add=True)
+    vision_labels = models.TextField(blank=True, null=True)  # Store Vision API labels
+
 
     def __str__(self):
         return f"RF-{str(self.uuid)[:4]}"

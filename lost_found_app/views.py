@@ -8,6 +8,9 @@ from rest_framework.response import Response
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
+from google.cloud import vision
+import os
+import json
 
 
 
@@ -63,6 +66,19 @@ def report_lost_item(request):
     else:
         form = LostItemForm()
     return render(request, 'report_lost.html', {'form': form})
+
+
+# Set up Google Cloud Vision client
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './service-account-file.json'
+client = vision.ImageAnnotatorClient()
+
+def analyze_image(image_path):
+    with open(image_path, 'rb') as image_file:
+        content = image_file.read()
+    image = vision.Image(content=content)
+    response = client.label_detection(image=image)
+    labels = response.label_annotations
+    return ', '.join([f"{label.description} ({label.score:.2f})" for label in labels])
 
 def report_found_item(request):
     if request.method == 'POST':

@@ -52,6 +52,18 @@
         button:hover {
             background: #555;
         }
+        .toggle-link {
+            text-align: center;
+            margin-top: 10px;
+            cursor: pointer;
+            color: #007BFF;
+        }
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+        .hidden {
+            display: none;
+        }
         .toast {
             position: fixed;
             top: 20px;
@@ -66,27 +78,94 @@
         .toast.show {
             display: block;
         }
+        .tooltip {
+            position: absolute;
+            background: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+        }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var toast = document.querySelector('.toast');
-            if (toast) {
-                toast.classList.add('show');
-                setTimeout(function() {
-                    toast.classList.remove('show');
-                }, 3000);
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const toggleToSignup = document.getElementById('toggle-to-signup');
+            const toggleToLogin = document.getElementById('toggle-to-login');
+            const inputs = document.querySelectorAll('input[title]');
+
+            toggleToSignup.addEventListener('click', function() {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+            });
+
+            toggleToLogin.addEventListener('click', function() {
+                signupForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+            });
+
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    showTooltip(input);
+                });
+                input.addEventListener('blur', function() {
+                    hideTooltip(input);
+                });
+                input.addEventListener('input', function() {
+                    if (input.checkValidity()) {
+                        hideTooltip(input);
+                    } else {
+                        showTooltip(input);
+                    }
+                });
+            });
+
+            function showTooltip(input) {
+                let tooltip = input.nextElementSibling;
+                if (!tooltip || !tooltip.classList.contains('tooltip')) {
+                    tooltip = document.createElement('div');
+                    tooltip.classList.add('tooltip');
+                    tooltip.innerText = input.title;
+                    input.parentNode.insertBefore(tooltip, input.nextSibling);
+                }
+                tooltip.style.display = 'block';
+                const rect = input.getBoundingClientRect();
+                tooltip.style.top = `${rect.top + window.scrollY - tooltip.offsetHeight - 5}px`;
+                tooltip.style.left = `${rect.left + window.scrollX}px`;
+            }
+
+            function hideTooltip(input) {
+                const tooltip = input.nextElementSibling;
+                if (tooltip && tooltip.classList.contains('tooltip')) {
+                    tooltip.style.display = 'none';
+                }
             }
         });
     </script>
 </head>
 <body>
     <div class="container">
-        <h2>Sign Up</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Sign Up</button>
-        </form>
+        <div id="signup-form">
+            <h2>Sign Up</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Sign Up</button>
+            </form>
+            <p class="toggle-link" id="toggle-to-login">Already have an account? Log in here.</p>
+        </div>
+        <div id="login-form" class="hidden">
+            <h2>Login</h2>
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                {{ login_form.as_p }}
+                <button type="submit">Login</button>
+            </form>
+            <p class="toggle-link" id="toggle-to-signup">Don't have an account? Sign up.</p>
+        </div>
         {% if messages %}
             <div class="toast">
                 {% for message in messages %}
