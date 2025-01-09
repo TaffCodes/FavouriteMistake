@@ -9,8 +9,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from google.cloud import vision
+from .matching import find_matches
 import os
 import json
+
 
 
 
@@ -99,3 +101,8 @@ def item_details(request, id):
         lost_item = None
         found_item = get_object_or_404(FoundItem, uuid=id)
     return render(request, 'item_details.html', {'lost_item': lost_item, 'found_item': found_item})
+
+def dashboard(request):
+    matches = find_matches()
+    print(f"Matches passed to template: {matches}")  # Debugging information
+    return render(request, 'dashboard.html', {'matches': matches})
