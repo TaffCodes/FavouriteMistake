@@ -1,74 +1,10 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
-from django.views import generic
-from .forms import SignUpForm, LostItemForm, FoundItemForm
-from .models import LostItem, FoundItem
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from google.cloud import vision
+from .forms import LostItemForm, FoundItemForm, LostIDCardForm, FoundIDCardForm
+from .models import LostItem, FoundItem, LostIDCard, FoundIDCard
 from .matching import find_matches
+from google.cloud import vision
 import os
-import json
-
-
-
-
-class SignUpView(generic.CreateView):
-    form_class = SignUpForm
-    success_url = reverse_lazy('login')
-    template_name = 'registration/signup.html'
-
-
-@api_view(['GET'])
-def hello_world_api(request):
-    return Response({"message": "Welcome to the Smart Lost and Found Platform"})
-
-
-@login_required
-def hello_world(request):
-    lost_items = LostItem.objects.all()
-    found_items = FoundItem.objects.all()
-    return render(request, 'hello_world.html', {'lost_items': lost_items, 'found_items': found_items})
-
-def home(request):
-    return render(request, 'home.html')
-
-def signup(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            user.refresh_from_db()  # Load the profile instance created by the signal
-            user.email = form.cleaned_data.get('email')
-            user.save()
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=user.username, password=raw_password)
-            login(request, user)
-            messages.success(request, 'Account created successfully!')
-            return redirect('login')
-            
-    else:
-        form = SignUpForm()
-    return render(request, 'registration/signup.html', {'form': form})
-
-@login_required
-def profile(request):
-    return render(request, 'profile.html', {'user': request.user})
-
-def report_lost_item(request):
-    if request.method == 'POST':
-        form = LostItemForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Lost item reported successfully!')
-            return redirect('hello_world')
-    else:
-        form = LostItemForm()
-    return render(request, 'report_lost.html', {'form': form})
-
 
 # Set up Google Cloud Vision client
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './service-account-file.json'
@@ -82,16 +18,59 @@ def analyze_image(image_path):
     labels = response.label_annotations
     return ', '.join([f"{label.description} ({label.score:.2f})" for label in labels])
 
+def report_lost_item(request):
+    if request.method == 'POST':
+        form = LostItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            lost_item = form.save(commit=False)
+            lost_item.vision_labels = analyze_image(lost_item.image.path)
+            lost_item.save()
+            messages.success(request, 'Lost item reported successfully!')
+            return redirect('hello_world')
+    else:
+        form = LostItemForm()
+    return render(request, 'report_lost.html', {'form': form})
+
 def report_found_item(request):
     if request.method == 'POST':
         form = FoundItemForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            found_item = form.save(commit=False)
+            found_item.vision_labels = analyze_image(found_item.image.path)
+            found_item.save()
             messages.success(request, 'Found item reported successfully!')
             return redirect('hello_world')
     else:
         form = FoundItemForm()
     return render(request, 'report_found.html', {'form': form})
+
+def report_lost_id(request):
+    if request.method == 'POST':
+        form = LostIDCardForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Lost ID card reported successfully!')
+            return redirect('hello_world')
+    else:
+        form = LostIDCardForm()
+    return render(request, 'report_lost_id.html', {'form': form})
+
+def report_found_id(request):
+    if request.method == 'POST':
+        form = FoundIDCardForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Found ID card reported successfully!')
+            return redirect('hello_world')
+    else:
+        form = FoundIDCardForm()
+    return render(request, 'report_found_id.html', {'form': form})
+
+def search_id(request):
+    query = request.GET.get('q')
+    lost_ids = LostIDCard.objects.filter(id_number=query)
+    found_ids = FoundIDCard.objects.filter(id_number=(query))
+    return render(request, 'search_results.html', {'lost_ids': lost_ids, 'found_ids': found_ids})
 
 def item_details(request, id):
     try:

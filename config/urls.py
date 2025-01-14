@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from lost_found_app.views import signup, hello_world, hello_world_api, home, profile, report_lost_item, report_found_item, item_details, dashboard
+from lost_found_app.views import signup, hello_world, hello_world_api, home, profile, report_lost_item, report_found_item, item_details, dashboard, search_id, report_found_id, report_lost_id, dashboard, search_id    
 
 urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
@@ -30,6 +30,8 @@ urlpatterns = [
     path('profile/', profile, name='profile'),
     path('report-lost/', report_lost_item, name='report_lost'),
     path('report-found/', report_found_item, name='report_found'),
+    path('report-lost-id/', report_lost_id, name='report_lost_id'),
+    path('report-found-id/', report_found_id, name='report_found_id'),
     path('item-details/<uuid:id>/', item_details, name='item_details'),
     path('dashboard/', dashboard, name='dashboard'),  # Add this line
 

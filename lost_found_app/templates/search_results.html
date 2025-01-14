@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results</h1>
+    <h2>Lost ID Cards</h2>
+    <ul>
+        {% for id_card in lost_ids %}
+            <li>{{ id_card.id_number }} - {{ id_card.first_name }} - {{ id_card.location }}</li>
+        {% endfor %}
+    </ul>
+    <h2>Found ID Cards</h2>
+    <ul>
+        {% for id_card in found_ids %}
+            <li>{{ id_card.id_number }} - {{ id_card.first_name }} - {{ id_card.location }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
