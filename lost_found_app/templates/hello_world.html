@@ -103,8 +103,6 @@
         <div class="links">
             <a href="{% url 'report_lost' %}">Report Lost Item</a>
             <a href="{% url 'report_found' %}">Report Found Item</a>
-            <a href="{% url 'report_lost_id' %}">Report Lost ID Card</a>
-            <a href="{% url 'report_found_id' %}">Report Found ID Card</a>
             <a href="{% url 'dashboard' %}">Matched Items</a>
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}

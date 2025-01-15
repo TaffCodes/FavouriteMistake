@@ -43,20 +43,20 @@ class FoundItem(models.Model):
     def __str__(self):
         return f"RF-{str(self.uuid)[:4]}"
     
-class LostIDCard(models.Model):
-    id_number = models.CharField(max_length=20, unique=True)
-    first_name = models.CharField(max_length=100)
-    location = models.CharField(max_length=100)
-    reported_at = models.DateTimeField(auto_now_add=True)
+# class LostIDCard(models.Model):
+#     id_number = models.CharField(max_length=20, unique=True)
+#     first_name = models.CharField(max_length=100)
+#     location = models.CharField(max_length=100)
+#     reported_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.id_number
+#     def __str__(self):
+#         return self.id_number
 
-class FoundIDCard(models.Model):
-    id_number = models.CharField(max_length=20, unique=True)
-    first_name = models.CharField(max_length=100)
-    location = models.CharField(max_length=100)
-    reported_at = models.DateTimeField(auto_now_add=True)
+# class FoundIDCard(models.Model):
+#     id_number = models.CharField(max_length=20, unique=True)
+#     first_name = models.CharField(max_length=100)
+#     location = models.CharField(max_length=100)
+#     reported_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.id_number
+#     def __str__(self):
+#         return self.id_number

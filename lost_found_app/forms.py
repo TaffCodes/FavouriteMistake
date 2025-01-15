@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import LostItem, FoundItem, LostIDCard, FoundIDCard
+from .models import LostItem, FoundItem
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -34,22 +34,22 @@ class FoundItemForm(forms.ModelForm):
             'image': forms.ClearableFileInput(),
         }
 
-    class LostIDCardForm(forms.ModelForm):
-        class Meta:
-            model = LostIDCard
-            fields = ['id_number', 'first_name', 'location']
-            widgets = {
-                'id_number': forms.TextInput(attrs={'placeholder': 'Enter ID number'}),
-                'first_name': forms.TextInput(attrs={'placeholder': 'Enter first name'}),
-                'location': forms.TextInput(attrs={'placeholder': 'Enter location lost'}),
-            }
+# class LostIDCardForm(forms.ModelForm):
+#     class Meta:
+#         model = LostIDCard
+#         fields = ['id_number', 'first_name', 'location']
+#         widgets = {
+#             'id_number': forms.TextInput(attrs={'placeholder': 'Enter ID number'}),
+#             'first_name': forms.TextInput(attrs={'placeholder': 'Enter first name'}),
+#             'location': forms.TextInput(attrs={'placeholder': 'Enter location lost'}),
+#         }
 
-class FoundIDCardForm(forms.ModelForm):
-    class Meta:
-        model = FoundIDCard
-        fields = ['id_number', 'first_name', 'location']
-        widgets = {
-            'id_number': forms.TextInput(attrs={'placeholder': 'Enter ID number'}),
-            'first_name': forms.TextInput(attrs={'placeholder': 'Enter first name'}),
-            'location': forms.TextInput(attrs={'placeholder': 'Enter location found'}),
-        }
+# class FoundIDCardForm(forms.ModelForm):
+#     class Meta:
+#         model = FoundIDCard
+#         fields = ['id_number', 'first_name', 'location']
+#         widgets = {
+#             'id_number': forms.TextInput(attrs={'placeholder': 'Enter ID number'}),
+#             'first_name': forms.TextInput(attrs={'placeholder': 'Enter first name'}),
+#             'location': forms.TextInput(attrs={'placeholder': 'Enter location found'}),
+        # }
