@@ -30,6 +30,7 @@ local_settings.py
 db.sqlite3
 media/
 service-account-file.json
+git rm --cached service-account-file.jsonservice-account-file.json
 # If you are using PostgreSQL:
 *.pgsql
 
@@ -42,6 +43,9 @@ service-account-file.json
 # Secrets and environment variables
 .env
 .env.*
+*.json
+media/
+.gitignore
 
 # Static files
 staticfiles/
