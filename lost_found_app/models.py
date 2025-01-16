@@ -43,6 +43,15 @@ class FoundItem(models.Model):
     def __str__(self):
         return f"RF-{str(self.uuid)[:4]}"
     
+class ItemMatch(models.Model):
+    lost_item = models.ForeignKey(LostItem, on_delete=models.CASCADE)
+    found_item = models.ForeignKey(FoundItem, on_delete=models.CASCADE)
+    match_score = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('lost_item', 'found_item')
+    
 # class LostIDCard(models.Model):
 #     id_number = models.CharField(max_length=20, unique=True)
 #     first_name = models.CharField(max_length=100)

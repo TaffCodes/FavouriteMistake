@@ -7,77 +7,138 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #f5f5f5;
         }
-        .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
-            padding: 20px;
-            background: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 50px;
-        }
-        h1 {
+
+        .header {
+            background-color: #333;
+            color: white;
+            padding: 1rem;
             text-align: center;
-            color: #333;
         }
-        .match {
+
+        .nav {
+            background-color: #444;
+            padding: 0.5rem;
+            text-align: center;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+            border-radius: 4px;
+        }
+
+        .nav a:hover {
+            background-color: #555;
+        }
+
+        .matches {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .match-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            padding: 1.5rem;
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
-            padding: 10px;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            align-items: center;
+            flex-wrap: wrap;
         }
-        .item {
-            width: 45%;
+
+        .lost-item, .found-item {
+            flex: 1;
+            min-width: 300px;
+            padding: 1rem;
         }
-        .item img {
-            width: 100%;
+
+        .match-score {
+            background: #4CAF50;
+            color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem;
+        }
+
+        img {
+            max-width: 100%;
             height: auto;
-            border-radius: 5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .item h3 {
-            margin: 10px 0;
-            font-size: 18px;
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 2rem;
         }
-        .item p {
-            margin: 5px 0;
-            color: #777;
+
+        h3 {
+            color: #444;
+            margin-top: 0;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .match-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .lost-item, .found-item {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Matching Dashboard</h1>
-        {% if matches %}
-            {% for lost_item, found_item in matches %}
-                <div class="match">
-                    <div class="item">
-                        <h3>Lost Item</h3>
-                        <img src="{{ lost_item.image.url }}" alt="{{ lost_item.name }}">
-                        <p><strong>Name:</strong> {{ lost_item.name }}</p>
-                        <p><strong>Category:</strong> {{ lost_item.category.name }}</p>
-                        <p><strong>Description:</strong> {{ lost_item.description }}</p>
-                        <p><strong>Location:</strong> {{ lost_item.location }}</p>
-                        <p><strong>Labels:</strong> {{ lost_item.vision_labels }}</p>
-                    </div>
-                    <div class="item">
-                        <h3>Found Item</h3>
-                        <img src="{{ found_item.image.url }}" alt="{{ found_item.name }}">
-                        <p><strong>Name:</strong> {{ found_item.name }}</p>
-                        <p><strong>Category:</strong> {{ found_item.category.name }}</p>
-                        <p><strong>Description:</strong> {{ found_item.description }}</p>
-                        <p><strong>Location:</strong> {{ found_item.location }}</p>
-                        <p><strong>Labels:</strong> {{ found_item.vision_labels }}</p>
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>No matches found.</p>
-        {% endif %}
+    <div class="header">
+        <h1>Smart Lost and Found Platform</h1>
+    </div>
+    <div class="nav">
+        <a href="{% url 'hello_world' %}">Home</a>
+        <a href="{% url 'report_lost' %}">Report Lost</a>
+        <a href="{% url 'report_found' %}">Report Found</a>
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+    </div>
+
+    <div class="matches">
+        <h2>Potential Matches</h2>
+        {% for match in matches %}
+        <div class="match-card">
+            <div class="lost-item">
+                <h3>Lost Item: {{ match.lost_item.name }}</h3>
+                <img src="{{ match.lost_item.image.url }}" alt="Lost item">
+                <p>Labels: {{ match.lost_item.vision_labels }}</p>
+            </div>
+            <div class="match-score">
+                {{ match.match_score|floatformat:2 }}
+            </div>
+            <div class="found-item">
+                <h3>Found Item: {{ match.found_item.name }}</h3>
+                <img src="{{ match.found_item.image.url }}" alt="Found item">
+                <p>Labels: {{ match.found_item.vision_labels }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align: center; padding: 2rem;">No matches found yet.</p>
+        {% endfor %}
     </div>
 </body>
 </html>

@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 from .forms import SignUpForm, LostItemForm, FoundItemForm
-from .models import LostItem, FoundItem
-from .matching import find_matches
+from .models import LostItem, FoundItem, ItemMatch
+from .matching import find_matches_for_item
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.decorators import login_required
@@ -58,16 +58,16 @@ def signup(request):
 def profile(request):
     return render(request, 'profile.html', {'user': request.user})
 
-def report_lost_item(request):
-    if request.method == 'POST':
-        form = LostItemForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Lost item reported successfully!')
-            return redirect('hello_world')
-    else:
-        form = LostItemForm()
-    return render(request, 'report_lost.html', {'form': form})
+# def report_lost_item(request):
+#     if request.method == 'POST':
+#         form = LostItemForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, 'Lost item reported successfully!')
+#             return redirect('hello_world')
+#     else:
+#         form = LostItemForm()
+#     return render(request, 'report_lost.html', {'form': form})
 
 
 
@@ -81,15 +81,53 @@ def analyze_image(image_path):
     image = vision.Image(content=content)
     response = client.label_detection(image=image)
     labels = response.label_annotations
+    if not labels:
+        return ''
     return ', '.join([f"{label.description} ({label.score:.2f})" for label in labels])
+
+# def report_found_item(request):
+#     if request.method == 'POST':
+#         form = FoundItemForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, 'Found item reported successfully!')
+#             return redirect('hello_world')
+#     else:
+#         form = FoundItemForm()
+#     return render(request, 'report_found.html', {'form': form})
+
+def report_lost_item(request):
+    if request.method == 'POST':
+        form = LostItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            lost_item = form.save(commit=False)
+            lost_item.save()
+            # Analyze image with Vision API
+            lost_item.vision_labels = analyze_image(lost_item.image.path)
+            lost_item.save()
+            
+            # Run matching algorithm
+            find_matches_for_item(lost_item)
+            messages.success(request, 'Lost item reported successfully!')
+            return redirect('dashboard')
+    else:
+        form = LostItemForm()
+    return render(request, 'report_lost.html', {'form': form})
 
 def report_found_item(request):
     if request.method == 'POST':
         form = FoundItemForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            found_item = form.save(commit=False)
+            found_item.save()
+            # Analyze image with Vision API 
+            found_item.vision_labels = analyze_image(found_item.image.path)
+            found_item.save()
+            
+            # Run matching algorithm
+            find_matches_for_item(found_item, is_found=True)
             messages.success(request, 'Found item reported successfully!')
-            return redirect('hello_world')
+            return redirect('dashboard')
     else:
         form = FoundItemForm()
     return render(request, 'report_found.html', {'form': form})
@@ -103,10 +141,17 @@ def item_details(request, id):
         found_item = get_object_or_404(FoundItem, uuid=id)
     return render(request, 'item_details.html', {'lost_item': lost_item, 'found_item': found_item})
 
+# def dashboard(request):
+#     matches = find_matches()
+#     print(f"Matches passed to template: {matches}")  # Debugging information
+#     return render(request, 'dashboard.html', {'matches': matches})
+
 def dashboard(request):
-    matches = find_matches()
-    print(f"Matches passed to template: {matches}")  # Debugging information
-    return render(request, 'dashboard.html', {'matches': matches})
+    # Get all matches, ordered by score
+    matches = ItemMatch.objects.all().order_by('-match_score')
+    return render(request, 'dashboard.html', {
+        'matches': matches
+    })
 
 # def search_id(request):
 #     query = request.GET.get('q')
