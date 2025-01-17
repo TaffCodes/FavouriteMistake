@@ -51,21 +51,3 @@ class ItemMatch(models.Model):
     
     class Meta:
         unique_together = ('lost_item', 'found_item')
-    
-# class LostIDCard(models.Model):
-#     id_number = models.CharField(max_length=20, unique=True)
-#     first_name = models.CharField(max_length=100)
-#     location = models.CharField(max_length=100)
-#     reported_at = models.DateTimeField(auto_now_add=True)
-
-#     def __str__(self):
-#         return self.id_number
-
-# class FoundIDCard(models.Model):
-#     id_number = models.CharField(max_length=20, unique=True)
-#     first_name = models.CharField(max_length=100)
-#     location = models.CharField(max_length=100)
-#     reported_at = models.DateTimeField(auto_now_add=True)
-
-#     def __str__(self):
-#         return self.id_number

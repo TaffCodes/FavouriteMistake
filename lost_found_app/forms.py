@@ -33,23 +33,3 @@ class FoundItemForm(forms.ModelForm):
             'location': forms.TextInput(attrs={'placeholder': 'Enter location found'}),
             'image': forms.ClearableFileInput(),
         }
-
-# class LostIDCardForm(forms.ModelForm):
-#     class Meta:
-#         model = LostIDCard
-#         fields = ['id_number', 'first_name', 'location']
-#         widgets = {
-#             'id_number': forms.TextInput(attrs={'placeholder': 'Enter ID number'}),
-#             'first_name': forms.TextInput(attrs={'placeholder': 'Enter first name'}),
-#             'location': forms.TextInput(attrs={'placeholder': 'Enter location lost'}),
-#         }
-
-# class FoundIDCardForm(forms.ModelForm):
-#     class Meta:
-#         model = FoundIDCard
-#         fields = ['id_number', 'first_name', 'location']
-#         widgets = {
-#             'id_number': forms.TextInput(attrs={'placeholder': 'Enter ID number'}),
-#             'first_name': forms.TextInput(attrs={'placeholder': 'Enter first name'}),
-#             'location': forms.TextInput(attrs={'placeholder': 'Enter location found'}),
-        # }

@@ -155,17 +155,9 @@
                 {{ form.as_p }}
                 <button type="submit">Sign Up</button>
             </form>
-            <p class="toggle-link" id="toggle-to-login">Already have an account? Log in here.</p>
+            <p class="toggle-link"><a href="{% url 'login' %}">Already have an account? Log in.</a></p>
         </div>
-        <div id="login-form" class="hidden">
-            <h2>Login</h2>
-            <form method="post" action="{% url 'login' %}">
-                {% csrf_token %}
-                {{ login_form.as_p }}
-                <button type="submit">Login</button>
-            </form>
-            <p class="toggle-link" id="toggle-to-signup">Don't have an account? Sign up.</p>
-        </div>
+        
         {% if messages %}
             <div class="toast">
                 {% for message in messages %}

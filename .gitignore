@@ -29,8 +29,7 @@ __pycache__/
 local_settings.py
 db.sqlite3
 media/
-service-account-file.json
-git rm --cached service-account-file.jsonservice-account-file.json
+
 # If you are using PostgreSQL:
 *.pgsql
 
@@ -50,7 +49,7 @@ media/
 # Static files
 staticfiles/
 static/
-
+venv/
 # Media files
 media/
 

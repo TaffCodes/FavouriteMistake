@@ -30,9 +30,7 @@ urlpatterns = [
     path('profile/', profile, name='profile'),
     path('report-lost/', report_lost_item, name='report_lost'),
     path('report-found/', report_found_item, name='report_found'),
-    # path('report-lost-id/', report_lost_id, name='report_lost_id'),
-    # path('report-found-id/', report_found_id, name='report_found_id'),
     path('item-details/<uuid:id>/', item_details, name='item_details'),
-    path('dashboard/', dashboard, name='dashboard'),  # Add this line
+    path('dashboard/', dashboard, name='dashboard'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

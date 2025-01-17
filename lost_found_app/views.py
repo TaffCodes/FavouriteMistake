@@ -4,13 +4,14 @@ from django.views import generic
 from .forms import SignUpForm, LostItemForm, FoundItemForm
 from .models import LostItem, FoundItem, ItemMatch
 from .matching import find_matches_for_item
+import os
+from decouple import config
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from google.cloud import vision
-import os
 import json
 
 
@@ -58,21 +59,11 @@ def signup(request):
 def profile(request):
     return render(request, 'profile.html', {'user': request.user})
 
-# def report_lost_item(request):
-#     if request.method == 'POST':
-#         form = LostItemForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request, 'Lost item reported successfully!')
-#             return redirect('hello_world')
-#     else:
-#         form = LostItemForm()
-#     return render(request, 'report_lost.html', {'form': form})
-
 
 
 # Set up Google Cloud Vision client
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './service-account-file.json'
+SERVICE_KEY = config('SERVICE_KEY')
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = SERVICE_KEY
 client = vision.ImageAnnotatorClient()
 
 def analyze_image(image_path):
@@ -85,16 +76,6 @@ def analyze_image(image_path):
         return ''
     return ', '.join([f"{label.description} ({label.score:.2f})" for label in labels])
 
-# def report_found_item(request):
-#     if request.method == 'POST':
-#         form = FoundItemForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request, 'Found item reported successfully!')
-#             return redirect('hello_world')
-#     else:
-#         form = FoundItemForm()
-#     return render(request, 'report_found.html', {'form': form})
 
 def report_lost_item(request):
     if request.method == 'POST':
@@ -141,10 +122,6 @@ def item_details(request, id):
         found_item = get_object_or_404(FoundItem, uuid=id)
     return render(request, 'item_details.html', {'lost_item': lost_item, 'found_item': found_item})
 
-# def dashboard(request):
-#     matches = find_matches()
-#     print(f"Matches passed to template: {matches}")  # Debugging information
-#     return render(request, 'dashboard.html', {'matches': matches})
 
 def dashboard(request):
     # Get all matches, ordered by score
@@ -153,8 +130,3 @@ def dashboard(request):
         'matches': matches
     })
 
-# def search_id(request):
-#     query = request.GET.get('q')
-#     lost_ids = LostIDCard.objects.filter(id_number__icontains(query))
-#     found_ids = FoundIDCard.objects.filter(id_number__icontains(query))
-#     return render(request, 'search_results.html', {'lost_ids': lost_ids, 'found_ids': found_ids})
