@@ -12,7 +12,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from google.cloud import vision
-import json
+import time
+from google.api_core.exceptions import ServiceUnavailable
+from .notifications import notify_users
 
 
 
@@ -70,11 +72,20 @@ def analyze_image(image_path):
     with open(image_path, 'rb') as image_file:
         content = image_file.read()
     image = vision.Image(content=content)
-    response = client.label_detection(image=image)
-    labels = response.label_annotations
-    if not labels:
-        return ''
-    return ', '.join([f"{label.description} ({label.score:.2f})" for label in labels])
+    
+    retries = 3
+    for attempt in range(retries):
+        try:
+            response = client.label_detection(image=image)
+            labels = response.label_annotations
+            if not labels:
+                return ''
+            return ', '.join([f"{label.description} ({label.score:.2f})" for label in labels])
+        except ServiceUnavailable as e:
+            if attempt < retries - 1:
+                time.sleep(2 ** attempt)  # Exponential backoff
+            else:
+                raise e
 
 
 def report_lost_item(request):
@@ -82,13 +93,16 @@ def report_lost_item(request):
         form = LostItemForm(request.POST, request.FILES)
         if form.is_valid():
             lost_item = form.save(commit=False)
+            lost_item.user = request.user
             lost_item.save()
             # Analyze image with Vision API
             lost_item.vision_labels = analyze_image(lost_item.image.path)
             lost_item.save()
             
             # Run matching algorithm
-            find_matches_for_item(lost_item)
+            matches = find_matches_for_item(lost_item)
+            notify_users(matches)
+
             messages.success(request, 'Lost item reported successfully!')
             return redirect('dashboard')
     else:
@@ -100,13 +114,16 @@ def report_found_item(request):
         form = FoundItemForm(request.POST, request.FILES)
         if form.is_valid():
             found_item = form.save(commit=False)
+            found_item.user = request.user
             found_item.save()
             # Analyze image with Vision API 
             found_item.vision_labels = analyze_image(found_item.image.path)
             found_item.save()
             
             # Run matching algorithm
-            find_matches_for_item(found_item, is_found=True)
+            matches = find_matches_for_item(found_item, is_found=True)
+            notify_users(matches)
+
             messages.success(request, 'Found item reported successfully!')
             return redirect('dashboard')
     else:

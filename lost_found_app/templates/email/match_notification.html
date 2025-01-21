@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Potential Match Found for Your Lost Item</title>
+</head>
+<body>
+    <p>Dear {{ user.first_name }},</p>
+    <p>We have found a potential match for your lost item:</p>
+    <h3>Lost Item</h3>
+    <p>Name: {{ lost_item.name }}</p>
+    <p>Description: {{ lost_item.description }}</p>
+    <h3>Found Item</h3>
+    <p>Name: {{ found_item.name }}</p>
+    <p>Description: {{ found_item.description }}</p>
+    <p>Please visit the platform to view more details and confirm the match.</p>
+    <p>Best regards,<br>Smart Lost and Found Platform Team</p>
+</body>
+</html>
