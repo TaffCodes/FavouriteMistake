@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -15,7 +16,13 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+def get_default_user():
+    default_user, created = User.objects.get_or_create(username='defaultuser', defaults={'password': 'defaultpassword'})
+    return default_user.id
+User = get_user_model()
+
 class LostItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)  # Set UUID as primary key
     name = models.CharField(max_length=100)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -30,6 +37,7 @@ class LostItem(models.Model):
         return f"RL-{str(self.uuid)[:4]}"
 
 class FoundItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)  # Set UUID as primary key
     name = models.CharField(max_length=100)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -51,3 +59,13 @@ class ItemMatch(models.Model):
     
     class Meta:
         unique_together = ('lost_item', 'found_item')
+
+class EmailLog(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    subject = models.CharField(max_length=255)
+    body = models.TextField()
+    sent_at = models.DateTimeField(auto_now_add=True)
+    success = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Email to {self.user.email} - {self.subject}"

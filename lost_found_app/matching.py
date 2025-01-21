@@ -1,6 +1,4 @@
 from .models import LostItem, FoundItem, ItemMatch
-import json
-
 
 def calculate_match_score(lost_labels, found_labels):
     lost_set = set(lost_labels)
@@ -9,9 +7,10 @@ def calculate_match_score(lost_labels, found_labels):
     return len(common_labels) / max(len(lost_set), len(found_set))
 
 def find_matches_for_item(item, is_found=False):
+    matches = []
     # Parse vision labels
     if not item.vision_labels:
-        return
+        return matches
     item_labels = set(label.split('(')[0].strip() for label in item.vision_labels.split(','))
     
     # Get items to compare against
@@ -32,16 +31,18 @@ def find_matches_for_item(item, is_found=False):
         match_score = calculate_match_score(item_labels, compare_labels)
         
         # If match score > threshold, create match
-        if match_score > 0.1:  # Adjust threshold as needed
+        if match_score > 0.3:  # Adjust threshold as needed
             if is_found:
-                ItemMatch.objects.get_or_create(
+                match, created = ItemMatch.objects.get_or_create(
                     lost_item=compare_item,
                     found_item=current_item,
                     defaults={'match_score': match_score}
                 )
             else:
-                ItemMatch.objects.get_or_create(
+                match, created = ItemMatch.objects.get_or_create(
                     lost_item=current_item, 
                     found_item=compare_item,
                     defaults={'match_score': match_score}
                 )
+            matches.append((compare_item, current_item))
+    return matches
