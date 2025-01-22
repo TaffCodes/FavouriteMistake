@@ -19,6 +19,7 @@ from .notifications import notify_users
 
 
 
+
 class SignUpView(generic.CreateView):
     form_class = SignUpForm
     success_url = reverse_lazy('login')
@@ -37,7 +38,8 @@ def hello_world(request):
     return render(request, 'hello_world.html', {'lost_items': lost_items, 'found_items': found_items})
 
 def home(request):
-    return render(request, 'home.html')
+    matches = ItemMatch.objects.all().order_by('-created_at')[:9]
+    return render(request, 'home.html', {'matches': matches})
 
 def signup(request):
     if request.method == 'POST':

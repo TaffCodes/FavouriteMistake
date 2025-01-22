@@ -2,9 +2,111 @@
 <html>
 <head>
     <title>Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .nav {
+            background-color: #444;
+            padding: 0.5rem;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+            border-radius: 4px;
+        }
+
+        .nav a:hover {
+            background-color: #555;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .item {
+            width: 30%;
+            margin: 10px;
+            padding: 10px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .item h3 {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .item p {
+            margin: 5px 0;
+            color: #777;
+        }
+
+        @media (max-width: 768px) {
+            .item {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to the Smart Lost and Found Platform</h1>
-    <p><a href="{% url 'signup' %}">Sign Up</a> | <a href="{% url 'login' %}">Login</a></p>
+    <div class="header">
+        <h1>Welcome to the Smart Lost and Found Platform</h1>
+    </div>
+    <div class="nav">
+        <a href="{% url 'signup' %}">Sign Up</a>
+        <a href="{% url 'login' %}">Login</a>
+    </div>
+
+    <div class="container">
+        <h2>Successfully Matched Items</h2>
+        <div class="items">
+            {% for match in matches|slice:":10" %}
+            <div class="item">
+                <h3>Lost Item: {{ match.lost_item.name }}</h3>
+                <img src="{{ match.lost_item.image.url }}" alt="Lost item">
+                <h3>Found Item: {{ match.found_item.name }}</h3>
+                <img src="{{ match.found_item.image.url }}" alt="Found item">
+                <p>Match Score: {{ match.match_score|floatformat:2 }}</p>
+            </div>
+            {% empty %}
+            <p style="text-align: center; padding: 2rem;">No matches found yet.</p>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 </html>
