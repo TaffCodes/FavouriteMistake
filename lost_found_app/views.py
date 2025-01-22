@@ -87,7 +87,7 @@ def analyze_image(image_path):
             else:
                 raise e
 
-
+@login_required
 def report_lost_item(request):
     if request.method == 'POST':
         form = LostItemForm(request.POST, request.FILES)
@@ -109,6 +109,7 @@ def report_lost_item(request):
         form = LostItemForm()
     return render(request, 'report_lost.html', {'form': form})
 
+@login_required
 def report_found_item(request):
     if request.method == 'POST':
         form = FoundItemForm(request.POST, request.FILES)
@@ -140,10 +141,15 @@ def item_details(request, id):
     return render(request, 'item_details.html', {'lost_item': lost_item, 'found_item': found_item})
 
 
+@login_required
 def dashboard(request):
-    # Get all matches, ordered by score
-    matches = ItemMatch.objects.all().order_by('-match_score')
-    return render(request, 'dashboard.html', {
-        'matches': matches
-    })
+    matches = ItemMatch.objects.all().order_by('-created_at')
+    for match in matches:
+        if match.match_score > 0.6:
+            match.level = 'High match'
+        elif match.match_score > 0.2:
+            match.level = 'Medium match'
+        else:
+            match.level = 'Low match'
+    return render(request, 'dashboard.html', {'matches': matches})
 

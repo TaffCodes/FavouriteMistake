@@ -63,13 +63,38 @@
             background: #4CAF50;
             color: white;
             padding: 1rem;
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
+            border-radius: 5%;
+            width: 20px;
+            height:3px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 1rem;
+        }
+
+        .match-level {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: bold;
+            color: white;
+            margin-top: 0.5rem;
+            opacity: 1;
+        }
+
+        .high-match {
+            background-color: #008600;
+        }
+
+        .medium-match {
+            background-color: yellow;
+            color: black;
+        }
+
+        .low-match {
+            background-color: lightcoral;
         }
 
         img {
@@ -130,6 +155,9 @@
             </div>
             <div class="match-score">
                 {{ match.match_score|floatformat:2 }}
+            </div>
+            <div class="match-level {% if match.level == 'High match' %}high-match{% elif match.level == 'Medium match' %}medium-match{% else %}low-match{% endif %}">
+                {{ match.level }}
             </div>
             <div class="found-item">
                 <h3>Found Item: {{ match.found_item.name }}</h3>
