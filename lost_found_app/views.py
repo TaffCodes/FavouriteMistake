@@ -125,7 +125,8 @@ def report_found_item(request):
             
             # Run matching algorithm
             matches = find_matches_for_item(found_item, is_found=True)
-            notify_users(matches)
+            if matches:
+                notify_users(matches)
 
             messages.success(request, 'Found item reported successfully!')
             return redirect('dashboard')
