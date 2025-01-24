@@ -152,6 +152,7 @@
                 <h3>Lost Item: {{ match.lost_item.name }}</h3>
                 <img src="{{ match.lost_item.image.url }}" alt="Lost item">
                 <p>Labels: {{ match.lost_item.vision_labels }}</p>
+                <p> Username: {{ match.lost_item.user.username }}</p>
             </div>
             <div class="match-score">
                 {{ match.match_score|floatformat:2 }}
@@ -163,6 +164,7 @@
                 <h3>Found Item: {{ match.found_item.name }}</h3>
                 <img src="{{ match.found_item.image.url }}" alt="Found item">
                 <p>Labels: {{ match.found_item.vision_labels }}</p>
+                <p> Username: {{ match.found_item.user.username }}</p>
             </div>
         </div>
         {% empty %}
