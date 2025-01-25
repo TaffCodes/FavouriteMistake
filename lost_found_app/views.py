@@ -53,7 +53,7 @@ def signup(request):
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
             messages.success(request, 'Account created successfully!')
-            return redirect('login')
+            return redirect('hello_world')
             
     else:
         form = SignUpForm()
