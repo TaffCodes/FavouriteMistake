@@ -146,6 +146,7 @@
                         <img src="{{ item.image.url }}" alt="{{ item.name }}">
                         <h3>{{ item.name }}</h3>
                         <p>ID: RL-{{ item.uuid|slice:":4" }}</p>
+                        <p>User:<strong>{{ item.user.username }} </strong></p>
                     </a>
                 </div>
             {% endfor %}
@@ -158,6 +159,7 @@
                         <img src="{{ item.image.url }}" alt="{{ item.name }}">
                         <h3>{{ item.name }}</h3>
                         <p>ID: RF-{{ item.uuid|slice:":4" }}</p>
+                        <p>User:<strong>{{ item.user.username }} </strong></p>
                     </a>
                 </div>
             {% endfor %}

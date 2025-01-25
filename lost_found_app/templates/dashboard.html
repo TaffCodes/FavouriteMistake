@@ -141,7 +141,11 @@
         <a href="{% url 'hello_world' %}">Home</a>
         <a href="{% url 'report_lost' %}">Report Lost</a>
         <a href="{% url 'report_found' %}">Report Found</a>
-        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'profile' %}">You are logged in as {{user.username }}</a>
+        <form method="post" action="{% url 'logout' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
     </div>
 
     <div class="matches">
@@ -152,7 +156,7 @@
                 <h3>Lost Item: {{ match.lost_item.name }}</h3>
                 <img src="{{ match.lost_item.image.url }}" alt="Lost item">
                 <p>Labels: {{ match.lost_item.vision_labels }}</p>
-                <p> Username: {{ match.lost_item.user.username }}</p>
+                <p> User: {{ match.lost_item.user.username }}</p>
             </div>
             <div class="match-score">
                 {{ match.match_score|floatformat:2 }}
@@ -164,7 +168,7 @@
                 <h3>Found Item: {{ match.found_item.name }}</h3>
                 <img src="{{ match.found_item.image.url }}" alt="Found item">
                 <p>Labels: {{ match.found_item.vision_labels }}</p>
-                <p> Username: {{ match.found_item.user.username }}</p>
+                <p> User: {{ match.found_item.user.username }}</p>
             </div>
         </div>
         {% empty %}

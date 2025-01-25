@@ -114,10 +114,10 @@ def report_lost_item(request):
 @login_required
 def report_found_item(request):
     if request.method == 'POST':
-        form = FoundItemForm, LostItemForm(request.POST, request.FILES)
+        form = FoundItemForm(request.POST, request.FILES)
         if form.is_valid():
             found_item = form.save(commit=False)
-            found_item = request.user
+            found_item.user = request.user
             found_item.save()
             # Analyze image with Vision API 
             found_item.vision_labels = analyze_image(found_item.image.path)
@@ -146,7 +146,10 @@ def item_details(request, id):
 
 @login_required
 def dashboard(request):
-    matches = ItemMatch.objects.all().order_by('-created_at')
+    user = request.user
+    found_items = FoundItem.objects.filter(user=user)
+    lost_items = LostItem.objects.filter(user=user)
+    matches = ItemMatch.objects.filter(lost_item__in=lost_items).order_by('-created_at') | ItemMatch.objects.filter(found_item__in=found_items).order_by('-created_at')
     for match in matches:
         if match.match_score > 0.6:
             match.level = 'High match'
