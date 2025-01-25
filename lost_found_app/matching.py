@@ -14,12 +14,11 @@ def find_matches_for_item(item, is_found=False):
     item_labels = set(label.split('(')[0].strip() for label in item.vision_labels.split(','))
     
     # Get items to compare against
-    user = item.user
     if is_found:
-        compare_items = LostItem.objects.filter(user=user)
+        compare_items = LostItem.objects.all()
         current_item = item
     else:
-        compare_items = FoundItem.objects.filter(user=user)
+        compare_items = FoundItem.objects.all()
         current_item = item
         
     # Find matches
