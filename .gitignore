@@ -50,8 +50,10 @@ media/
 staticfiles/
 static/
 venv/
+.venv/
 # Media files
 media/
+.media/
 
 # VS Code settings
 .vscode/
