@@ -33,8 +33,8 @@ def hello_world_api(request):
 
 @login_required
 def hello_world(request):
-    lost_items = LostItem.objects.all()
-    found_items = FoundItem.objects.all()
+    lost_items = LostItem.objects.all().order_by('-created_at')
+    found_items = FoundItem.objects.all().order_by('-created_at')
     return render(request, 'hello_world.html', {'lost_items': lost_items, 'found_items': found_items})
 
 def home(request):
