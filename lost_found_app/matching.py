@@ -1,49 +1,62 @@
-from .models import LostItem, FoundItem, ItemMatch
+from .models import LostItem, FoundItem, ItemMatch 
 
-def calculate_match_score(lost_labels, found_labels):
-    lost_set = set(lost_labels)
-    found_set = set(found_labels)
-    common_labels = lost_set.intersection(found_set)
-    return len(common_labels) / max(len(lost_set), len(found_set))
+def parse_vision_labels(vision_response):
+    """
+    Parses vision labels and extracts their confidence scores.
+    """
+    label_score = {}
+    for part in vision_response.split(','):
+        part = part.strip()
+        if '(' in part and ')' in part:
+            label, score_str = part.split('(')
+            score = float(score_str.rstrip(')'))
+            label_score[label.strip().lower()] = score
+        else:
+            label_score[part.lower()] = 1.0  # Default score if missing
+    return label_score
+
+def calculate_weighted_label_score(lost_labels_str, found_labels_str):
+    lost_labels = parse_vision_labels(lost_labels_str)
+    found_labels = parse_vision_labels(found_labels_str)
+    
+    common_score = 0.0
+    total_possible = 0.0
+    for label, lost_score in lost_labels.items():
+        if label in found_labels:
+            found_score = found_labels[label]
+            common_score += min(lost_score, found_score)
+        total_possible += lost_score  # Using lost item's total as a baseline
+    
+    return common_score / total_possible if total_possible > 0 else 0.0
 
 def find_matches_for_item(item, is_found=False):
     matches = []
-    # Parse vision labels
     if not item.vision_labels:
         return matches
-    item_labels = set(label.split('(')[0].strip() for label in item.vision_labels.split(','))
     
     # Get items to compare against
-    if is_found:
-        compare_items = LostItem.objects.all()
-        current_item = item
-    else:
-        compare_items = FoundItem.objects.all()
-        current_item = item
-        
-    # Find matches
+    compare_items = LostItem.objects.all() if is_found else FoundItem.objects.all()
+    
     for compare_item in compare_items:
         if not compare_item.vision_labels:
             continue
-        compare_labels = set(label.split('(')[0].strip() 
-                           for label in compare_item.vision_labels.split(','))
         
-        match_score = calculate_match_score(item_labels, compare_labels)
+        # Use weighted label score from Cloud Vision
+        match_score = calculate_weighted_label_score(item.vision_labels, compare_item.vision_labels)
         
-        # If match score > threshold, create match
-        if match_score > 0.65:  # Adjust threshold as needed
+        # Adjust threshold based on experimental tuning
+        if match_score > 0.65:
             if is_found:
                 match, created = ItemMatch.objects.get_or_create(
                     lost_item=compare_item,
-                    found_item=current_item,
+                    found_item=item,
                     defaults={'match_score': match_score}
                 )
             else:
                 match, created = ItemMatch.objects.get_or_create(
-                    lost_item=current_item, 
+                    lost_item=item,
                     found_item=compare_item,
                     defaults={'match_score': match_score}
                 )
-            matches.append((compare_item, current_item))
+            matches.append((compare_item, item))
     return matches
-

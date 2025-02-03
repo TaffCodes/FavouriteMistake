@@ -10,13 +10,13 @@ class Command(BaseCommand):
         ItemMatch.objects.all().delete()
         self.stdout.write('Cleared existing matches')
 
-        # # Get all lost items
-        # lost_items = LostItem.objects.all()
-        # total = lost_items.count()
+        # Get all lost items
+        lost_items = LostItem.objects.all()
+        total = lost_items.count()
         
-        # # Rerun matching for each lost item
-        # for index, lost_item in enumerate(lost_items, 1):
-        #     matches = find_matches_for_item(lost_item, is_found=False)
-        #     self.stdout.write(f'Processed item {index}/{total}: {lost_item.name} - Found {len(matches)} matches')
+        # Rerun matching for each lost item
+        for index, lost_item in enumerate(lost_items, 1):
+            matches = find_matches_for_item(lost_item, is_found=False)
+            self.stdout.write(f'Processed item {index}/{total}: {lost_item.name} - Found {len(matches)} matches')
 
-        # self.stdout.write(self.style.SUCCESS('Successfully rematched all items'))
+        self.stdout.write(self.style.SUCCESS('Successfully rematched all items'))
