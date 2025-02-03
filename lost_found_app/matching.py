@@ -31,7 +31,7 @@ def find_matches_for_item(item, is_found=False):
         match_score = calculate_match_score(item_labels, compare_labels)
         
         # If match score > threshold, create match
-        if match_score > 0.3:  # Adjust threshold as needed
+        if match_score > 0.65:  # Adjust threshold as needed
             if is_found:
                 match, created = ItemMatch.objects.get_or_create(
                     lost_item=compare_item,
@@ -46,3 +46,4 @@ def find_matches_for_item(item, is_found=False):
                 )
             matches.append((compare_item, current_item))
     return matches
+
