@@ -10,7 +10,7 @@ class EmailLogAdmin(admin.ModelAdmin):
 
 @admin.register(ItemMatch)
 class ItemMatchAdmin(admin.ModelAdmin):
-    list_display = ('lost_item', 'found_item', 'match_score', 'created_at', 'match_level')
+    list_display = ('lost_item', 'found_item', 'match_score', 'created_at', 'match_level', 'status')
     search_fields = ('lost_item__name', 'found_item__name')
     list_filter = ('match_score', 'created_at', 'status')
 
@@ -28,8 +28,6 @@ class LostItemAdmin(admin.ModelAdmin):
     list_display = ('name', 'user', 'reported_at', 'is_matched')
     search_fields = ('name', 'user__username')
     list_filter = ('user',)
-    
-
 
     def is_matched(self, obj):
         return ItemMatch.objects.filter(lost_item=obj).exists()
@@ -41,7 +39,6 @@ class FoundItemAdmin(admin.ModelAdmin):
     list_display = ('name', 'user', 'reported_at', 'is_matched')
     search_fields = ('name', 'user__username')
     list_filter = ('user',)
-    
 
     def is_matched(self, obj):
         return ItemMatch.objects.filter(found_item=obj).exists()
