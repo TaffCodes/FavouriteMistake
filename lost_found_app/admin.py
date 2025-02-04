@@ -12,7 +12,7 @@ class EmailLogAdmin(admin.ModelAdmin):
 class ItemMatchAdmin(admin.ModelAdmin):
     list_display = ('lost_item', 'found_item', 'match_score', 'created_at', 'match_level')
     search_fields = ('lost_item__name', 'found_item__name')
-    list_filter = ('match_score', 'created_at')
+    list_filter = ('match_score', 'created_at', 'status')
 
     def match_level(self, obj):
         if obj.match_score > 0.6:

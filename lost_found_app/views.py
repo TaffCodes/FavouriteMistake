@@ -15,6 +15,8 @@ from google.cloud import vision
 import time
 from google.api_core.exceptions import ServiceUnavailable
 from .notifications import notify_users
+from django.http import JsonResponse
+
 
 
 
@@ -159,3 +161,24 @@ def dashboard(request):
             match.level = 'Low match'
     return render(request, 'dashboard.html', {'matches': matches})
 
+
+
+@api_view(['POST'])
+def update_match_status(request):
+    if request.method == "POST":
+        match_id = request.POST.get("match_id")
+        status = request.POST.get("status")
+
+        # Debugging: Log the received data
+        print(f"Received match_id: {match_id}, status: {status}")
+
+        if status not in ["accepted", "rejected"]:
+            return JsonResponse({"error": "Invalid status selected."}, status=400)
+
+        try:
+            match = ItemMatch.objects.get(id=match_id)
+            match.status = status
+            match.save()
+            return JsonResponse({"success": f"Match {match_id} updated to {status}."})
+        except ItemMatch.DoesNotExist:
+            return JsonResponse({"error": "Match not found."}, status=404)

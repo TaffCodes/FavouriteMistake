@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from lost_found_app.views import signup, hello_world, hello_world_api, home, profile, report_lost_item, report_found_item, item_details, dashboard  
+from lost_found_app.views import signup, hello_world, hello_world_api, home, profile, report_lost_item, report_found_item, item_details, dashboard, update_match_status
 
 urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
@@ -32,5 +32,6 @@ urlpatterns = [
     path('report-found/', report_found_item, name='report_found'),
     path('item-details/<uuid:id>/', item_details, name='item_details'),
     path('dashboard/', dashboard, name='dashboard'),
+    path("update-match-status/", update_match_status, name="update_match_status"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

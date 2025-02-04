@@ -20,7 +20,7 @@
         .nav {
             background-color: #444;
             padding: 0.5rem;
-            text-align: center;
+            text-align: right;
         }
 
         .nav a {
@@ -63,9 +63,9 @@
             background: #4CAF50;
             color: white;
             padding: 1rem;
-            border-radius: 5%;
-            width: 20px;
-            height:3px;
+            border-radius: 15%;
+            width: 80px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -81,11 +81,11 @@
             font-weight: bold;
             color: white;
             margin-top: 0.5rem;
-            opacity: 1;
+            opacity: 0.5;
         }
 
         .high-match {
-            background-color: #008600;
+            background-color: green;
         }
 
         .medium-match {
@@ -132,20 +132,36 @@
             }
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.update-status-form').on('submit', function(event) {
+                event.preventDefault();
+                var form = $(this);
+                var status = $(document.activeElement).val(); // Get the value of the clicked button
+                var data = form.serialize() + '&status=' + status; // Append the status to the serialized data
+                $.ajax({
+                    type: 'POST',
+                    url: form.attr('action'),
+                    data: data,
+                    success: function(response) {
+                        alert(response.success);
+                    },
+                    error: function(response) {
+                        alert(response.responseJSON.error);
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="header">
         <h1>Smart Lost and Found Platform</h1>
     </div>
     <div class="nav">
-        <a href="{% url 'hello_world' %}">Home</a>
-        <a href="{% url 'report_lost' %}">Report Lost</a>
-        <a href="{% url 'report_found' %}">Report Found</a>
-        <a href="{% url 'profile' %}">You are logged in as {{user.username }}</a>
-        <form method="post" action="{% url 'logout' %}" style="display: inline;">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
-        </form>
+        <a href="{% url 'signup' %}">Sign Up</a>
+        <a href="{% url 'login' %}">Login</a>
     </div>
 
     <div class="matches">
@@ -156,7 +172,8 @@
                 <h3>Lost Item: {{ match.lost_item.name }}</h3>
                 <img src="{{ match.lost_item.image.url }}" alt="Lost item">
                 <p>Labels: {{ match.lost_item.vision_labels }}</p>
-                <p> User: {{ match.lost_item.user.username }}</p>
+                <p>User: {{ match.lost_item.user.username }}</p>
+                <p>Submitted at: {{ match.lost_item.reported_at }}</p>
             </div>
             <div class="match-score">
                 {{ match.match_score|floatformat:2 }}
@@ -168,7 +185,19 @@
                 <h3>Found Item: {{ match.found_item.name }}</h3>
                 <img src="{{ match.found_item.image.url }}" alt="Found item">
                 <p>Labels: {{ match.found_item.vision_labels }}</p>
-                <p> User: {{ match.found_item.user.username }}</p>
+                <p>User: {{ match.found_item.user.username }}</p>
+                <p>Submitted at: {{ match.found_item.reported_at }}</p>
+            </div>
+            <div class="match-timestamp">
+                <p>Matched at: {{ match.created_at }}</p>
+            </div>
+            <div class="match-actions">
+                <form class="update-status-form" action="{% url 'update_match_status' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="match_id" value="{{ match.id }}">
+                    <button type="submit" name="status" value="accepted">Accept</button>
+                    <button type="submit" name="status" value="rejected">Reject</button>
+                </form>
             </div>
         </div>
         {% empty %}
