@@ -80,7 +80,7 @@ def find_matches_for_item(item, is_found=False):
         match_score = calculate_weighted_label_score(item.vision_labels, compare_item.vision_labels)
         
         # Adjust threshold based on experimental tuning
-        if match_score > 0.65:
+        if match_score > 0.8:
             match, created = ItemMatch.objects.get_or_create(
                 lost_item=compare_item if is_found else item,
                 found_item=item if is_found else compare_item,
