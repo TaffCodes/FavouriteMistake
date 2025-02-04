@@ -11,6 +11,9 @@
         }
 
         .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             background-color: #333;
             color: white;
             padding: 1rem;
@@ -18,6 +21,9 @@
         }
 
         .nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             background-color: #444;
             padding: 0.5rem;
             text-align: right;
@@ -27,8 +33,10 @@
             color: white;
             text-decoration: none;
             padding: 0.5rem 1rem;
+            align-items: center;
             margin: 0 0.5rem;
             border-radius: 4px;
+            font-size: 16px;
         }
 
         .nav a:hover {
@@ -160,8 +168,17 @@
         <h1>Smart Lost and Found Platform</h1>
     </div>
     <div class="nav">
-        <a href="{% url 'signup' %}">Sign Up</a>
-        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'hello_world' %}">Home</a>
+        <a href="{% url 'report_lost' %}">Report Lost</a>
+        <a href="{% url 'report_found' %}">Report Found</a>
+        
+
+        <form method="post" action="{% url 'logout' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+        <a href="{% url 'admin:index' %}" class="admin-button">Admin</a>
+        <a href="{% url 'profile' %}">You are logged in as {{user.username }}</a>
     </div>
 
     <div class="matches">
