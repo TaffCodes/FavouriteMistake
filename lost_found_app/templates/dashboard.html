@@ -56,7 +56,6 @@
             margin-bottom: 2rem;
             padding: 1.5rem;
             display: flex;
-            justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
         }
@@ -67,11 +66,19 @@
             padding: 1rem;
         }
 
+        .match-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
         .match-score {
             background: #4CAF50;
             color: white;
             padding: 1rem;
-            border-radius: 15%;
+            border-radius: 50%;
             width: 80px;
             height: 80px;
             display: flex;
@@ -103,6 +110,34 @@
 
         .low-match {
             background-color: lightcoral;
+        }
+
+        .match-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .match-actions button {
+            width: 100px;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .match-actions button[name="status"][value="accepted"] {
+            background-color: blue;
+            color: white;
+        }
+
+        .match-actions button[name="status"][value="rejected"] {
+            background-color: red;
+            color: white;
         }
 
         img {
@@ -192,12 +227,6 @@
                 <p>User: {{ match.lost_item.user.username }}</p>
                 <p>Submitted at: {{ match.lost_item.reported_at }}</p>
             </div>
-            <div class="match-score">
-                {{ match.match_score|floatformat:2 }}
-            </div>
-            <div class="match-level {% if match.level == 'High match' %}high-match{% elif match.level == 'Medium match' %}medium-match{% else %}low-match{% endif %}">
-                {{ match.level }}
-            </div>
             <div class="found-item">
                 <h3>Found Item: {{ match.found_item.name }}</h3>
                 <img src="{{ match.found_item.image.url }}" alt="Found item">
@@ -205,8 +234,13 @@
                 <p>User: {{ match.found_item.user.username }}</p>
                 <p>Submitted at: {{ match.found_item.reported_at }}</p>
             </div>
-            <div class="match-timestamp">
-                <p>Matched at: {{ match.created_at }}</p>
+            <div class="match-info">
+                <div class="match-score">
+                    {{ match.match_score|floatformat:2 }}
+                </div>
+                <div class="match-level {% if match.level == 'High match' %}high-match{% elif match.level == 'Medium match' %}medium-match{% else %}low-match{% endif %}">
+                    {{ match.level }}
+                </div>
             </div>
             <div class="match-actions">
                 <form class="update-status-form" action="{% url 'update_match_status' %}" method="post">
