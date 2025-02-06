@@ -29,37 +29,6 @@ def calculate_weighted_label_score(lost_labels_str, found_labels_str):
     
     return common_score / total_possible if total_possible > 0 else 0.0
 
-# def find_matches_for_item(item, is_found=False):
-#     matches = []
-#     if not item.vision_labels:
-#         return matches
-    
-#     # Get items to compare against
-#     compare_items = LostItem.objects.all() if is_found else FoundItem.objects.all()
-    
-#     for compare_item in compare_items:
-#         if not compare_item.vision_labels:
-#             continue
-        
-#         # Use weighted label score from Cloud Vision
-#         match_score = calculate_weighted_label_score(item.vision_labels, compare_item.vision_labels)
-        
-#         # Adjust threshold based on experimental tuning
-#         if match_score > 0.65:
-#             if is_found:
-#                 match, created = ItemMatch.objects.get_or_create(
-#                     lost_item=compare_item,
-#                     found_item=item,
-#                     defaults={'match_score': match_score}
-#                 )
-#             else:
-#                 match, created = ItemMatch.objects.get_or_create(
-#                     lost_item=item,
-#                     found_item=compare_item,
-#                     defaults={'match_score': match_score}
-#                 )
-#             matches.append((compare_item, item))
-#     return matches
 
 def find_matches_for_item(item, is_found=False):
     matches = []
