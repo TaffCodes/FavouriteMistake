@@ -2,43 +2,77 @@
 <html>
 <head>
     <title>Potential Match Found</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            color: #444;
+            line-height: 1.6;
         }
         .container {
             width: 80%;
-            margin: auto;
+            max-width: 600px;
+            margin: 40px auto;
             overflow: hidden;
-            padding: 20px;
+            padding: 25px;
             background: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 50px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
         h1 {
             text-align: center;
-            color: #333;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+        .intro {
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 0 5px 5px 0;
         }
         .item {
-            margin-top: 20px;
-            padding: 10px;
+            margin-top: 25px;
+            padding: 20px;
             background: #f9f9f9;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
         .item img {
             width: 100%;
             height: auto;
-            border-radius: 5px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
         }
         .item h3 {
-            margin: 10px 0;
-            font-size: 18px;
+            margin: 0 0 15px 0;
+            color: #3498db;
+            font-size: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
         }
         .item p {
+            margin: 10px 0;
+            color: #555;
+        }
+        .item p strong {
+            color: #2c3e50;
+            min-width: 90px;
+            display: inline-block;
+        }
+        .signature {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .signature p {
             margin: 5px 0;
             color: #777;
         }
@@ -47,8 +81,12 @@
 <body>
     <div class="container">
         <h1>Potential Match Found for Your Lost Item</h1>
-        <p>Dear {{ user.username }},</p>
-        <p>We found a potential match for your lost item "{{ lost_item.name }}". Please check the details below:</p>
+        
+        <div class="intro">
+            <p>Dear {{ user.username }},</p>
+            <p>We found a potential match for your lost item "{{ lost_item.name }}". Please check the details below:</p>
+        </div>
+        
         <div class="item">
             <h3>Found Item</h3>
             <img src="{{ found_item.image.url }}" alt="{{ found_item.name }}">
@@ -58,8 +96,11 @@
             <p><strong>Location:</strong> {{ found_item.location }}</p>
             <p><strong>Labels:</strong> {{ found_item.vision_labels }}</p>
         </div>
-        <p>Best regards,</p>
-        <p>The Lost and Found Team</p>
+        
+        <div class="signature">
+            <p>Best regards,</p>
+            <p>The Lost and Found Team</p>
+        </div>
     </div>
 </body>
 </html>
