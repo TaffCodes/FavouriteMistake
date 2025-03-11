@@ -24,7 +24,7 @@ FavouriteMistake is a web platform designed to facilitate the reporting, search,
 
 1. **Clone the repository**:
     ```sh
-    git clone https://github.com/yourusername/FavouriteMistake.git
+    git clone https://github.com/TaffCodes/FavouriteMistake.git
     cd FavouriteMistake
     ```
 
