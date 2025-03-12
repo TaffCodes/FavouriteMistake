@@ -76,7 +76,7 @@
             <!-- Match Info Column -->
             <div class="col-md-2 text-center d-flex flex-column justify-content-center">
                 <div class="display-6 text-primary mb-2">
-                    {{ match.match_score|floatformat:2 }}%
+                    {{ match.match_score|floatformat:2 }}
                 </div>
                 <span class="badge {% if match.level == 'High match' %}bg-success{% elif match.level == 'Medium match' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
                     {{ match.level }}
