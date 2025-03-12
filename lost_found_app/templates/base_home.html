@@ -56,7 +56,7 @@
 <body>
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand brand-logo" href="{% url 'hello_world' %}">
+            <a class="navbar-brand brand-logo" href="{% url 'home' %}">
                 Smart Lost & Found
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -64,10 +64,6 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <div class="d-flex gap-2">
-                    <a href="{% url 'dashboard' %}" class="btn btn-primary">
-                        <span class="material-icons me-2">grid_view</span>
-                        Dashboard
-                    </a>
                     <a href="{% url 'report_lost' %}" class="btn btn-primary">
                         <span class="material-icons me-2">note_add</span>
                         Report Lost Item
@@ -76,9 +72,9 @@
                         <span class="material-icons me-2">bookmark_add</span>
                         Submit Found Item
                     </a>
-                    <a href="{% url 'logout' %}" class="btn btn-danger">
+                    <a href="{% url 'login' %}" class="btn btn-danger">
                         <span class="material-icons me-2">login</span>
-                        Logout
+                        Login
                     </a>
                 </div>
             </div>

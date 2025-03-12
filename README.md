@@ -24,7 +24,7 @@ FavouriteMistake is a web platform designed to facilitate the reporting, search,
 
 1. **Clone the repository**:
     ```sh
-    git clone https://github.com/yourusername/FavouriteMistake.git
+    git clone https://github.com/TaffCodes/FavouriteMistake.git
     cd FavouriteMistake
     ```
 
@@ -90,9 +90,7 @@ Contributions are welcome! Please follow these steps to contribute:
 4. Push to the branch (`git push origin feature/your-feature`).
 5. Open a pull request.
 
-## License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
 
 ## Contact
 

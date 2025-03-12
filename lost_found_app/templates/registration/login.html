@@ -1,101 +1,86 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login and Sign Up</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            width: 400px;
-            background: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        label {
-            margin-top: 10px;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="password"], input[type="email"] {
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        button {
-            padding: 10px;
-            margin-top: 20px;
-            background: #333;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #555;
-        }
-        .toggle-link {
-            text-align: center;
-            margin-top: 10px;
-            cursor: pointer;
-            color: #007BFF;
-        }
-        .toggle-link:hover {
-            text-decoration: underline;
-        }
-        .hidden {
-            display: none;
-        }
-    </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('login-form');
-            const signupForm = document.getElementById('signup-form');
-            const toggleToSignup = document.getElementById('toggle-to-signup');
-            const toggleToLogin = document.getElementById('toggle-to-login');
+{% extends 'base_registration.html' %}
 
-            toggleToSignup.addEventListener('click', function() {
-                loginForm.classList.add('hidden');
-                signupForm.classList.remove('hidden');
-            });
+{% block title %}Login{% endblock %}
 
-            toggleToLogin.addEventListener('click', function() {
-                signupForm.classList.add('hidden');
-                loginForm.classList.remove('hidden');
-            });
-        });
-    </script>
-</head>
-<body>
-    <div class="container">
-        <div id="login-form">
-            <h2>Login</h2>
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Login</button>
-            </form>
-            <p class="toggle-link"><a href="{% url 'signup' %}">Don't have an account? Sign up here.</a></p>
+{% block content %}
+<style>
+    .auth-card {
+        max-width: 600px;
+        margin: 2rem auto;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .form-control-lg {
+        padding: 1.2rem 1.5rem;
+        font-size: 1.1rem;
+        border-radius: 12px;
+    }
+    
+    .form-floating label {
+        padding: 1.2rem 1.5rem;
+        font-size: 1.05rem;
+        color: #6c757d;
+        transition: all 0.2s ease;
+    }
+    
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        transform: scale(0.85) translateY(-1.5rem) translateX(0.5rem);
+        opacity: 0.8;
+    }
+</style>
+
+<div class="container">
+    <div class="auth-card card">
+        <div class="card-header bg-primary text-white py-4">
+            <h2 class="text-center mb-0">
+                <span class="material-icons me-2" style="vertical-align: middle;">login</span>
+                Welcome Back
+            </h2>
         </div>
         
+        <div class="card-body p-5">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                
+                <div class="form-floating mb-4">
+                    <input type="text" 
+                           name="username" 
+                           class="form-control form-control-lg" 
+                           id="id_username" 
+                           placeholder="Enter your username" 
+                           required>
+                    <label for="id_username">Username</label>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input type="password" 
+                           name="password" 
+                           class="form-control form-control-lg" 
+                           id="id_password" 
+                           placeholder="Enter your password" 
+                           required>
+                    <label for="id_password">Password</label>
+                </div>
+
+                <div class="d-grid mb-4">
+                    <button type="submit" class="btn btn-primary btn-lg py-3">
+                        <span class="material-icons me-2">arrow_forward</span>
+                        Sign In
+                    </button>
+                </div>
+
+                <div class="text-center">
+                    <p class="mb-0">
+                        Don't have an account? 
+                        <a href="{% url 'signup' %}" class="text-decoration-none fw-bold">
+                            Create Account
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

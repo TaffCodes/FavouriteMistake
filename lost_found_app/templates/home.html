@@ -1,125 +1,190 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Home</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
+{% extends 'base_home.html' %}
 
-        .header {
-            background-color: #333;
-            color: white;
-            padding: 1rem;
-            text-align: center;
-        }
+{% block title %}Home{% endblock %}
 
-        .nav {
-            background-color: #444;
-            padding: 0.5rem;
-            display: flex;
-            justify-content: flex-end;
+{% block content %}
+<style>
+    /* Keep existing card styles */
+    .card {
+        height: 400px !important;
+    }
+    .card-header {
+        height: 60px;
+    }
+    .img-container {
+        height: 200px;
+        overflow: hidden;
+        background-color: #f8f9fa;
+        padding: 10px;
+    }
+    .img-fluid {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+    .img-fluid:hover {
+        transform: scale(1.05);
+    }
+    .card-body {
+        height: calc(100% - 60px);
+        overflow-y: auto;
+    }
+    @media (max-width: 768px) {
+        .card {
+            height: auto !important;
         }
+        .img-container {
+            height: 150px;
+        }
+    }
+    /* New hero section styles */
+    .hero-section {
+        background: linear-gradient(rgba(244, 235, 226, 0.9), rgba(244, 235, 226, 0.9)),
+                    url('https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+        background-size: cover;
+        background-position: center;
+        padding: 4rem 0;
+    }
+    .feature-icon {
+        font-size: 3rem;
+        color: var(--primary-blue);
+    }
+    .stat-badge {
+        background: var(--primary-blue);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 50px;
+    }
+</style>
 
-        .nav a {
-            color: white;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            margin: 0 0.5rem;
-            border-radius: 4px;
-        }
-
-        .nav a:hover {
-            background-color: #555;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .items {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-
-        .item {
-            width: 30%;
-            margin: 10px;
-            padding: 10px;
-            background: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            border-radius: 5px;
-        }
-
-        .item img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-
-        .item h3 {
-            margin: 10px 0;
-            font-size: 18px;
-        }
-
-        .item p {
-            margin: 5px 0;
-            color: #777;
-        }
-
-        @media (max-width: 768px) {
-            .item {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>Welcome to the Smart Lost and Found Platform</h1>
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-4 mb-4">Never Lose Your Belongings Again</h1>
+        <p class="lead mb-5">Our AI-powered platform helps reunite lost items with their owners in record time</p>
+        <div class="d-flex justify-content-center gap-3 mb-5">
+            <a href="{% url 'report_lost' %}" class="btn btn-primary btn-lg px-5">
+                <span class="material-icons me-2">note_add</span>
+                Report Lost Item
+            </a>
+            <a href="{% url 'report_found' %}" class="btn btn-primary btn-lg px-5">
+                <span class="material-icons me-2">bookmark_add</span>
+                Report Found Item
+            </a>
+        </div>
     </div>
-    <div class="nav">
-        <a href="{% url 'signup' %}">Sign Up</a>
-        <a href="{% url 'login' %}">Login</a>
-    </div>
+</section>
 
+<!-- How It Works -->
+<section class="py-5 bg-white">
     <div class="container">
-        <h2>Successfully Matched Items</h2>
-        <div class="items">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center p-4">
+                    <span class="material-icons feature-icon">camera_enhance</span>
+                    <h3 class="my-3">1. Upload Photos</h3>
+                    <p>Snap clear pictures of lost or found items using your smartphone</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center p-4">
+                    <span class="material-icons feature-icon">auto_awesome</span>
+                    <h3 class="my-3">2. AI Matching</h3>
+                    <p>Our platform analyzes visual features to find matches</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center p-4">
+                    <span class="material-icons feature-icon">connect_without_contact</span>
+                    <h3 class="my-3">3. Get Connected</h3>
+                    <p>Instant notifications when potential matches are identified</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Success Stats -->
+<section class="py-5" style="background-color: var(--brand-color);">
+    <div class="container text-center">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="stat-badge">
+                    <h2 class="mb-0">10,000+</h2>
+                    <p class="mb-0">Items Recovered</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-badge">
+                    <h2 class="mb-0">98%</h2>
+                    <p class="mb-0">Accuracy Rate</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-badge">
+                    <h2 class="mb-0">24h</h2>
+                    <p class="mb-0">Average Recovery Time</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Recent Matches Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Recently Reunited Items</h2>
+        <div class="row g-4">
             {% for match in matches|slice:":10" %}
-            <div class="item">
-                <h3>Lost Item: {{ match.lost_item.name }}</h3>
-                <img src="{{ match.lost_item.image.url }}" alt="Lost item">
-                <h3>Found Item: {{ match.found_item.name }}</h3>
-                <img src="{{ match.found_item.image.url }}" alt="Found item">
-                <p>Match Score: {{ match.match_score|floatformat:2 }}</p>
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-transparent">
+                        <h5 class="my-1">{{ match.lost_item.name }}</h5>
+                        <small class="text-muted">vs {{ match.found_item.name }}</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="img-container">
+                                    <img src="{{ match.lost_item.image.url }}" class="img-fluid rounded" alt="Lost item">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="img-container">
+                                    <img src="{{ match.found_item.image.url }}" class="img-fluid rounded" alt="Found item">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 d-flex justify-content-between align-items-center">
+                            <div class="badge bg-primary fs-6">
+                                Match Score: {{ match.match_score|floatformat:2 }}%
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             {% empty %}
-            <p style="text-align: center; padding: 2rem;">No matches found yet.</p>
+            <div class="col-12 text-center py-5">
+                <div class="alert alert-info">No matches found yet. Check back later!</div>
+            </div>
             {% endfor %}
         </div>
     </div>
-    <!--Start of Tawk.to Script-->
-<script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/67a0fe623a84273260794331/1ij6e3d6q';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
-    </script>
-    <!--End of Tawk.to Script-->
-</body>
-</html>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Find Your Lost Items?</h2>
+        <p class="lead mb-5">Join thousands of satisfied users who recovered their belongings</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'signup' %}" class="btn btn-light btn-lg px-5">
+                <span class="material-icons me-2">person_add</span>
+                Create Free Account
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

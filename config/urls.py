@@ -18,11 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from lost_found_app.views import signup, hello_world, hello_world_api, home, profile, report_lost_item, report_found_item, item_details, dashboard, update_match_status
+from lost_found_app.views import signup, logout, hello_world, hello_world_api, home, profile, report_lost_item, report_found_item, item_details, dashboard, update_match_status
 
 urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', signup, name='signup'),
+    path('logout/', logout, name='logout'),
     path('admin/', admin.site.urls),
     path('', include('lost_found_app.urls')),
     path('hello/', hello_world, name='hello_world'),

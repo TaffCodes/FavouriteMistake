@@ -16,6 +16,8 @@ import time
 from google.api_core.exceptions import ServiceUnavailable
 from .notifications import notify_users
 from django.http import JsonResponse
+from django.contrib.auth import logout as auth_logout
+from django.shortcuts import redirect
 
 
 
@@ -61,6 +63,15 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'registration/signup.html', {'form': form})
 
+
+
+
+def logout(request):
+    # Log the user out
+    auth_logout(request)
+    # Redirect to home page (or login page)
+    # messages.success(request, "You have been successfully logged out.")
+    return redirect('hello_world')
 @login_required
 def profile(request):
     return render(request, 'profile.html', {'user': request.user})
@@ -151,7 +162,18 @@ def dashboard(request):
     user = request.user
     found_items = FoundItem.objects.filter(user=user)
     lost_items = LostItem.objects.filter(user=user)
-    matches = ItemMatch.objects.filter(lost_item__in=lost_items).order_by('-created_at') | ItemMatch.objects.filter(found_item__in=found_items).order_by('-created_at')
+    
+    # Filter out matches that have already been accepted or rejected
+    matches = (ItemMatch.objects.filter(
+                lost_item__in=lost_items, 
+                status='pending'
+              ).order_by('-created_at') | 
+              ItemMatch.objects.filter(
+                found_item__in=found_items,
+                status='pending'
+              ).order_by('-created_at'))
+    
+    # Set match level based on match_score
     for match in matches:
         if match.match_score > 0.6:
             match.level = 'High match'
@@ -159,6 +181,7 @@ def dashboard(request):
             match.level = 'Medium match'
         else:
             match.level = 'Low match'
+            
     return render(request, 'dashboard.html', {'matches': matches})
 
 
@@ -173,12 +196,16 @@ def update_match_status(request):
         print(f"Received match_id: {match_id}, status: {status}")
 
         if status not in ["accepted", "rejected"]:
-            return JsonResponse({"error": "Invalid status selected."}, status=400)
+            messages.error(request, "Invalid status selected.")
+            return redirect("dashboard")
 
         try:
             match = ItemMatch.objects.get(id=match_id)
             match.status = status
             match.save()
-            return JsonResponse({"success": f"Match {match_id} updated to {status}."})
+            messages.success(request, f"Match status updated to {status}.")
         except ItemMatch.DoesNotExist:
-            return JsonResponse({"error": "Match not found."}, status=404)
+            messages.error(request, "Match not found.")
+
+        # Redirect back to the dashboard
+        return redirect("dashboard")

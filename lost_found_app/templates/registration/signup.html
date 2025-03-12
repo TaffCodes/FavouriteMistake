@@ -1,170 +1,172 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sign Up</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            width: 400px;
-            background: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        label {
-            margin-top: 10px;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="password"], input[type="email"] {
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        button {
-            padding: 10px;
-            margin-top: 20px;
-            background: #333;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #555;
-        }
-        .toggle-link {
-            text-align: center;
-            margin-top: 10px;
-            cursor: pointer;
-            color: #007BFF;
-        }
-        .toggle-link:hover {
-            text-decoration: underline;
-        }
-        .hidden {
-            display: none;
-        }
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #333;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: none;
-        }
-        .toast.show {
-            display: block;
-        }
-        .tooltip {
-            position: absolute;
-            background: #333;
-            color: #fff;
-            padding: 5px 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: none;
-            z-index: 1000;
-        }
-    </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('login-form');
-            const signupForm = document.getElementById('signup-form');
-            const toggleToSignup = document.getElementById('toggle-to-signup');
-            const toggleToLogin = document.getElementById('toggle-to-login');
-            const inputs = document.querySelectorAll('input[title]');
+{% extends 'base_registration.html' %}
 
-            toggleToSignup.addEventListener('click', function() {
-                loginForm.classList.add('hidden');
-                signupForm.classList.remove('hidden');
-            });
+{% block title %}Sign Up{% endblock %}
 
-            toggleToLogin.addEventListener('click', function() {
-                signupForm.classList.add('hidden');
-                loginForm.classList.remove('hidden');
-            });
+{% block content %}
+<style>
+    .auth-card {
+        max-width: 800px;
+        margin: 2rem auto;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .form-control-lg {
+        padding: 1.2rem 1.5rem;
+        font-size: 1.1rem;
+        border-radius: 12px;
+    }
+    
+    .form-floating label {
+        padding: 1.2rem 1.5rem;
+        font-size: 1.05rem;
+        color: #6c757d;
+        transition: all 0.2s ease;
+    }
+    
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        transform: scale(0.85) translateY(-1.5rem) translateX(0.5rem);
+        opacity: 0.8;
+    }
+    
+    .password-requirements {
+        font-size: 0.95rem;
+        color: #6c757d;
+    }
+</style>
 
-            inputs.forEach(input => {
-                input.addEventListener('focus', function() {
-                    showTooltip(input);
-                });
-                input.addEventListener('blur', function() {
-                    hideTooltip(input);
-                });
-                input.addEventListener('input', function() {
-                    if (input.checkValidity()) {
-                        hideTooltip(input);
-                    } else {
-                        showTooltip(input);
-                    }
-                });
-            });
+<div class="container">
+    <div class="auth-card card">
+        <div class="card-header bg-primary text-white py-4">
+            <h2 class="text-center mb-0">
+                <span class="material-icons me-2" style="vertical-align: middle;">person_add</span>
+                Create New Account
+            </h2>
+        </div>
 
-            function showTooltip(input) {
-                let tooltip = input.nextElementSibling;
-                if (!tooltip || !tooltip.classList.contains('tooltip')) {
-                    tooltip = document.createElement('div');
-                    tooltip.classList.add('tooltip');
-                    tooltip.innerText = input.title;
-                    input.parentNode.insertBefore(tooltip, input.nextSibling);
-                }
-                tooltip.style.display = 'block';
-                const rect = input.getBoundingClientRect();
-                tooltip.style.top = `${rect.top + window.scrollY - tooltip.offsetHeight - 5}px`;
-                tooltip.style.left = `${rect.left + window.scrollX}px`;
-            }
+        <div class="card-body p-5">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-4">
+                            <input type="text" 
+                                   name="username" 
+                                   class="form-control form-control-lg" 
+                                   id="id_username" 
+                                   placeholder="Choose username" 
+                                   required>
+                            <label for="id_username">Username</label>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-floating mb-4">
+                            <input type="email" 
+                                   name="email" 
+                                   class="form-control form-control-lg" 
+                                   id="id_email" 
+                                   placeholder="Enter your email" 
+                                   required>
+                            <label for="id_email">Email Address</label>
+                        </div>
+                    </div>
 
-            function hideTooltip(input) {
-                const tooltip = input.nextElementSibling;
-                if (tooltip && tooltip.classList.contains('tooltip')) {
-                    tooltip.style.display = 'none';
-                }
+                    <div class="col-md-6">
+                        <div class="form-floating mb-4">
+                            <input type="password" 
+                                   name="password1" 
+                                   class="form-control form-control-lg" 
+                                   id="id_password1" 
+                                   placeholder="Create password" 
+                                   required>
+                            <label for="id_password1">Password</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-4">
+                            <input type="password" 
+                                   name="password2" 
+                                   class="form-control form-control-lg" 
+                                   id="id_password2" 
+                                   placeholder="Confirm password" 
+                                   required>
+                            <label for="id_password2">Confirm Password</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="password-requirements mb-4">
+                    <p class="mb-2">Password must contain:</p>
+                    <ul class="list-unstyled">
+                        <li class="d-flex align-items-center mb-2">
+                            <span class="material-icons me-2" style="font-size: 1rem;">check_circle</span>
+                            At least 8 characters
+                        </li>
+                        <li class="d-flex align-items-center mb-2">
+                            <span class="material-icons me-2" style="font-size: 1rem;">check_circle</span>
+                            At least one number
+                        </li>
+                        <li class="d-flex align-items-center">
+                            <span class="material-icons me-2" style="font-size: 1rem;">check_circle</span>
+                            At least one special character
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="d-grid mb-4">
+                    <button type="submit" class="btn btn-primary btn-lg py-3">
+                        <span class="material-icons me-2">how_to_reg</span>
+                        Create Account
+                    </button>
+                </div>
+
+                <div class="text-center">
+                    <p class="mb-0">
+                        Already have an account? 
+                        <a href="{% url 'login' %}" class="text-decoration-none fw-bold">
+                            Login Here
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Real-time password validation
+    const password1 = document.getElementById('id_password1');
+    const password2 = document.getElementById('id_password2');
+    const requirements = document.querySelectorAll('.password-requirements li');
+
+    function checkPassword() {
+        const value = password1.value;
+        const isLengthValid = value.length >= 8;
+        const hasNumber = /\d/.test(value);
+        const hasSpecialChar = /[!@#$%^&*]/.test(value);
+
+        requirements[0].style.color = isLengthValid ? '#28a745' : '#dc3545';
+        requirements[1].style.color = hasNumber ? '#28a745' : '#dc3545';
+        requirements[2].style.color = hasSpecialChar ? '#28a745' : '#dc3545';
+    }
+
+    if(password1) {
+        password1.addEventListener('input', checkPassword);
+        password2.addEventListener('input', () => {
+            if(password1.value !== password2.value) {
+                password2.setCustomValidity("Passwords don't match");
+            } else {
+                password2.setCustomValidity('');
             }
         });
-    </script>
-</head>
-<body>
-    <div class="container">
-        <div id="signup-form">
-            <h2>Sign Up</h2>
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Sign Up</button>
-            </form>
-            <p class="toggle-link"><a href="{% url 'login' %}">Already have an account? Log in.</a></p>
-        </div>
-        
-        {% if messages %}
-            <div class="toast">
-                {% for message in messages %}
-                    {{ message }}
-                {% endfor %}
-            </div>
-        {% endif %}
-    </div>
-</body>
-</html>
+    }
+});
+</script>
+{% endblock %}

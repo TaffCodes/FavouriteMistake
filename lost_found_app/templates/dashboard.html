@@ -1,259 +1,123 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Matching Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
+{% extends 'base.html' %}
 
-        .header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #333;
-            color: white;
-            padding: 1rem;
-            text-align: center;
-        }
+{% block title %}Matching Dashboard{% endblock %}
 
-        .nav {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #444;
-            padding: 0.5rem;
-            text-align: right;
-        }
+{% block content %}
+<style>
+    .card.h-100 {
+        height: 500px !important; /* Fixed card height */
+    }
+    
+    .card-img-container {
+        height: 300px; /* Fixed height for image container */
+        overflow: hidden;
+        padding: 15px;
+        background-color: #f8f9fa;
+    }
+    
+    .card-img-top {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* Maintains aspect ratio */
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+    }
+    
+    .card-img-top:hover {
+        transform: scale(1.05);
+    }
+    
+    .card-header {
+        height: 75px; /* Fixed header height */
+    }
+    
+    .card-body {
+        height: calc(100% - 375px); /* Remaining space */
+        overflow-y: auto;
+    }
 
-        .nav a {
-            color: white;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            align-items: center;
-            margin: 0 0.5rem;
-            border-radius: 4px;
-            font-size: 16px;
+    @media (max-width: 768px) {
+        .card.h-100 {
+            height: auto !important;
         }
-
-        .nav a:hover {
-            background-color: #555;
-        }
-
-        .matches {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .match-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .lost-item, .found-item {
-            flex: 1;
-            min-width: 300px;
-            padding: 1rem;
-        }
-
-        .match-info {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .match-score {
-            background: #4CAF50;
-            color: white;
-            padding: 1rem;
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 1rem;
-        }
-
-        .match-level {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            font-weight: bold;
-            color: white;
-            margin-top: 0.5rem;
-            opacity: 0.5;
-        }
-
-        .high-match {
-            background-color: green;
-        }
-
-        .medium-match {
-            background-color: yellow;
-            color: black;
-        }
-
-        .low-match {
-            background-color: lightcoral;
-        }
-
-        .match-actions {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .match-actions button {
-            width: 100px;
-            padding: 0.5rem;
-            margin: 0.5rem 0;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .match-actions button[name="status"][value="accepted"] {
-            background-color: blue;
-            color: white;
-        }
-
-        .match-actions button[name="status"][value="rejected"] {
-            background-color: red;
-            color: white;
-        }
-
-        img {
-            max-width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        h2 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        h3 {
-            color: #444;
-            margin-top: 0;
-        }
-
-        p {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        @media (max-width: 768px) {
-            .match-card {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .lost-item, .found-item {
-                min-width: 100%;
-            }
-        }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.update-status-form').on('submit', function(event) {
-                event.preventDefault();
-                var form = $(this);
-                var status = $(document.activeElement).val(); // Get the value of the clicked button
-                var data = form.serialize() + '&status=' + status; // Append the status to the serialized data
-                $.ajax({
-                    type: 'POST',
-                    url: form.attr('action'),
-                    data: data,
-                    success: function(response) {
-                        alert(response.success);
-                    },
-                    error: function(response) {
-                        alert(response.responseJSON.error);
-                    }
-                });
-            });
-        });
-    </script>
-</head>
-<body>
-    <div class="header">
-        <h1>Smart Lost and Found Platform</h1>
-    </div>
-    <div class="nav">
-        <a href="{% url 'hello_world' %}">Home</a>
-        <a href="{% url 'report_lost' %}">Report Lost</a>
-        <a href="{% url 'report_found' %}">Report Found</a>
         
+        .card-img-container {
+            height: 250px;
+        }
+    }
+</style>
 
-        <form method="post" action="{% url 'logout' %}" style="display: inline;">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
-        </form>
-        <a href="{% url 'admin:index' %}" class="admin-button">Admin</a>
-        <a href="{% url 'profile' %}">You are logged in as {{user.username }}</a>
-    </div>
-
-    <div class="matches">
-        <h2>Potential Matches</h2>
-        {% for match in matches %}
-        <div class="match-card">
-            <div class="lost-item">
-                <h3>Lost Item: {{ match.lost_item.name }}</h3>
-                <img src="{{ match.lost_item.image.url }}" alt="Lost item">
-                <p>Labels: {{ match.lost_item.vision_labels }}</p>
-                <p>User: {{ match.lost_item.user.username }}</p>
-                <p>Submitted at: {{ match.lost_item.reported_at }}</p>
-            </div>
-            <div class="found-item">
-                <h3>Found Item: {{ match.found_item.name }}</h3>
-                <img src="{{ match.found_item.image.url }}" alt="Found item">
-                <p>Labels: {{ match.found_item.vision_labels }}</p>
-                <p>User: {{ match.found_item.user.username }}</p>
-                <p>Submitted at: {{ match.found_item.reported_at }}</p>
-            </div>
-            <div class="match-info">
-                <div class="match-score">
-                    {{ match.match_score|floatformat:2 }}
+<h2 class="text-center mb-5">Potential Matches</h2>
+{% for match in matches %}
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+        <div class="row g-4">
+            <!-- Lost Item Column -->
+            <div class="col-md-5">
+                <div class="card h-100">
+                    <div class="card-header bg-transparent">
+                        <h5>Lost Item</h5>
+                        <small class="text-muted">{{ match.lost_item.name }}</small>
+                    </div>
+                    <div class="card-img-container">
+                        <img src="{{ match.lost_item.image.url }}" class="card-img-top" alt="Lost item">
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            <small class="text-muted">
+                                Reported by {{ match.lost_item.user.username }}<br>
+                                {{ match.lost_item.reported_at|date:"M d, Y" }}
+                            </small>
+                        </p>
+                    </div>
                 </div>
-                <div class="match-level {% if match.level == 'High match' %}high-match{% elif match.level == 'Medium match' %}medium-match{% else %}low-match{% endif %}">
+            </div>
+
+            <!-- Match Info Column -->
+            <div class="col-md-2 text-center d-flex flex-column justify-content-center">
+                <div class="display-6 text-primary mb-2">
+                    {{ match.match_score|floatformat:2 }}%
+                </div>
+                <span class="badge {% if match.level == 'High match' %}bg-success{% elif match.level == 'Medium match' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
                     {{ match.level }}
-                </div>
+                </span>
             </div>
-            <div class="match-actions">
-                <form class="update-status-form" action="{% url 'update_match_status' %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="match_id" value="{{ match.id }}">
-                    <button type="submit" name="status" value="accepted">Accept</button>
-                    <button type="submit" name="status" value="rejected">Reject</button>
-                </form>
+
+            <!-- Found Item Column -->
+            <div class="col-md-5">
+                <div class="card h-100">
+                    <div class="card-header bg-transparent">
+                        <h5>Found Item</h5>
+                        <small class="text-muted">{{ match.found_item.name }}</small>
+                    </div>
+                    <div class="card-img-container">
+                        <img src="{{ match.found_item.image.url }}" class="card-img-top" alt="Found item">
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            <small class="text-muted">
+                                Reported by {{ match.found_item.user.username }}<br>
+                                {{ match.found_item.reported_at|date:"M d, Y" }}
+                            </small>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
-        {% empty %}
-        <p style="text-align: center; padding: 2rem;">No matches found yet.</p>
-        {% endfor %}
+
+        <form class="mt-4 text-center update-status-form" action="{% url 'update_match_status' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="match_id" value="{{ match.id }}">
+            <button type="submit" name="status" value="accepted" class="btn btn-primary btn-lg px-5 me-3">
+                <span class="material-icons me-2">check_circle</span>Accept
+            </button>
+            <button type="submit" name="status" value="rejected" class="btn btn-danger btn-lg px-5">
+                <span class="material-icons me-2">cancel</span>Reject
+            </button>
+        </form>
     </div>
-</body>
-</html>
+</div>
+{% empty %}
+<div class="alert alert-info text-center">No potential matches found at this time.</div>
+{% endfor %}
+{% endblock %}
