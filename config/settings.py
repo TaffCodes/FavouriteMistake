@@ -32,7 +32,10 @@ SECRET_KEY = 'django-insecure-if9ohd#yk$%pk(s#$hslp_5=nw^d8urr1wa9q-_9oe4k2gid2&
 SERVICE_KEY = config('SERVICE_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+PORT = int(os.environ.get('PORT', 8000))
+
 
 ALLOWED_HOSTS = [
     'favouritemistake.onrender.com',
@@ -42,7 +45,6 @@ ALLOWED_HOSTS = [
     'onrender.com',
 ]
 
-PORT = int(os.environ.get('PORT', 8000))
 
 # Application definition
 
@@ -59,6 +61,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -181,27 +184,18 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-# Static files (CSS, JavaScript, Images)
+# Static files configuration
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Additional static file locations
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-
-# Configure Django to use whitenoise for static file serving (add to MIDDLEWARE)
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add this line after security middleware
-    # Rest of your middleware...
-]
+# Only add directories that exist to STATICFILES_DIRS
+STATICFILES_DIRS = []
+static_dir = os.path.join(BASE_DIR, 'static')
+if os.path.isdir(static_dir):
+    STATICFILES_DIRS.append(static_dir)
 
 # Enable WhiteNoise compression and caching
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

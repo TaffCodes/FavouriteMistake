@@ -5,6 +5,11 @@ set -o errexit
 # Install dependencies
 pip install -r requirements.txt
 
+mkdir -p staticfiles
+mkdir -p static
+mkdir -p media/found_items
+mkdir -p media/lost_items
+
 # Run migrations
 python manage.py migrate
 
