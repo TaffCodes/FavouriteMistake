@@ -34,7 +34,12 @@ SERVICE_KEY = config('SERVICE_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'https://favouritemistake.onrender.com/',
+    'localhost',
+    '127.0.0.1',
+    'favouritemistake.onrender.com',
+]
 
 
 # Application definition
