@@ -39,8 +39,10 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'favouritemistake.onrender.com',
+    'onrender.com',
 ]
 
+PORT = int(os.environ.get('PORT', 8000))
 
 # Application definition
 
@@ -182,7 +184,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Additional static file locations
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# Configure Django to use whitenoise for static file serving (add to MIDDLEWARE)
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add this line after security middleware
+    # Rest of your middleware...
+]
+
+# Enable WhiteNoise compression and caching
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
