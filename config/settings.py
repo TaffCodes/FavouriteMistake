@@ -44,11 +44,13 @@ ALLOWED_HOSTS = [
     'favouritemistake.onrender.com',
     '0.0.0.0',
     'lost-found-app.onrender.com'
+    'smartlostfoundapp.paymentsoverflow.com',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://lost-found-app.onrender.com',
     'https://favouritemistake.onrender.com'
+    'https://smartlostfoundapp.paymentsoverflow.com',
     # 'http://127.0.0.1',
     # 'http://0.0.0.0',
     # 'http://localhost',
