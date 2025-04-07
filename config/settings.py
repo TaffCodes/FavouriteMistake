@@ -35,7 +35,7 @@ SERVICE_KEY = config('SERVICE_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'https://favouritemistake.onrender.com/',
+    'favouritemistake.onrender.com',
     'localhost',
     '127.0.0.1',
     'favouritemistake.onrender.com',
