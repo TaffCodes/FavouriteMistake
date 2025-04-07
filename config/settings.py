@@ -48,11 +48,11 @@ ALLOWED_HOSTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://lost-found-app.onrender.com/',
+    'https://lost-found-app.onrender.com',
     'https://favouritemistake.onrender.com'
-    '127.0.0.1',
-    '0.0.0.0',
-    'localhost',
+    'http://127.0.0.1',
+    'http://0.0.0.0',
+    'http://localhost',
 ]
 
 # Application definition
