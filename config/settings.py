@@ -43,6 +43,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'favouritemistake.onrender.com',
     'onrender.com',
+    '0.0.0.0',
+    'lost-found-app.onrender.com'
 ]
 
 
