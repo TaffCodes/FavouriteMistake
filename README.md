@@ -1,6 +1,7 @@
 # FavouriteMistake
-
 FavouriteMistake is a web platform designed to facilitate the reporting, search, and recovery of lost and found property around campus. The platform leverages image recognition technology to match lost and found items, making it easier for users to recover their belongings.
+
+## Try it here: [DEMO](www.favouritemistake.onrender.com).👈🏾👈🏾 - Please wait for the project to spin up.
 
 ## Features
 
@@ -94,4 +95,4 @@ Contributions are welcome! Please follow these steps to contribute:
 
 ## Contact
 
-For any inquiries or support, please contact [me](mailto:basweti.dev@gmail.com.com).
+For any inquiries or support, please contact [me](mailto:basweti.dev@gmail.com).
