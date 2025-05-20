@@ -6,6 +6,7 @@ FavouriteMistake is a web platform designed to facilitate the reporting, search,
 **Try it here:** [DEMO](https://favouritemistake.onrender.com)
 - username: ```kdn```
 - password: ```290x290x```
+  
 *Please wait for the project to spin up.*
 
 
