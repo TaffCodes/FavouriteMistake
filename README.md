@@ -3,7 +3,7 @@ FavouriteMistake is a web platform designed to facilitate the reporting, search,
 
 ## Have a glimpse 👇👇
 
-**Try it here:** [DEMO](https://www.favouritemistake.onrender.com)  
+**Try it here:** [DEMO](https://favouritemistake.onrender.com)  
 *Please wait for the project to spin up.*
 
 
